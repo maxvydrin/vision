@@ -1,7 +1,7 @@
 ---
 type: foundation
 artifact: studio-representation-model
-status: draft-v0.8.12
+status: draft-v0.8.13
 date: 2026-07-13
 scope: studio-product
 language: en
@@ -228,7 +228,7 @@ flowchart LR
 | **Managed Object**  | Studio's representation of one real entity. **One object per tenant** — workspaces include it by reference, never copy it. Everything else it carries — below this table.                                                                                                                                                                                                                                                                                                                                                               | Typed by an Object Type; assembled from source records via identity mapping (authored objects have none); included into workspaces and projects. | User-facing   |
 | **Relation**        | A typed, directed link between exactly two managed objects — *"PR **resolves** Work Item"*. Carries an **origin** — **imported** (a source fact; appears in every graph holding both endpoints, invariant 5) or **asserted / inferred** (added by a member or proposed by Studio; lives in one graph, invariant 4) — plus the same provenance and confidence as an object.                                                                                                                                                               | Instance of a Relation Type.                                                                                                                     | User-facing   |
 | **Object Type**     | The blueprint of one kind of object: what a Requirement, a PR or a Release *is* — its expected attributes and which relations it may enter. Three rules: every domain-facing type stands for **exactly one organization-model term**; a type may **specialize** another (Metric-by-domain, Decision subtypes); **one registry per tenant, each workspace activates its subset** — the workspace's *effective ontology* (invariant 13). Types come from three suppliers — **built-in**, **kit install**, **custom** — recorded per type. | Types managed objects; defines expected attributes and allowed relation types; registered at the tenant; activated per workspace.                | Admin-facing  |
-| **Relation Type**   | Registered kind of relation (realizes, implements, depends on, responsible for, advances…). Mirrors the organization model's primary relationships. Registered tenant-wide and activated per workspace, like object types.                                                                                                                                                                                                                                                                                                              | Constrains which object types it may connect.                                                                                                    | Admin-facing  |
+| **Relation Type**   | Registered kind of relation (`realized_by`, `implements`, `depends_on`, `has_owner`, `supports`…). Mirrors the organization model's primary relationships. Registered tenant-wide and activated per workspace, like object types.                                                                                                                                                                                                                                                                                                              | Constrains which object types it may connect.                                                                                                    | Admin-facing  |
 
 **What every managed object carries:**
 
@@ -401,7 +401,7 @@ stateDiagram-v2
 | Project                                    | represented as    | Managed Object (type Project)                                                                 | `1:1`                    | Authored in Studio, or mirrored from a tracker and adopted; the workbench (inclusion, workflows) is Studio behavior.               |
 | Project                                    | belongs to        | Workspace                                                                                     | `N:1`                    |                                                                                                                                    |
 | Project                                    | includes          | Managed Object                                                                                | `N:M`                    | By reference; an object may be in several projects.                                                                                |
-| Project                                    | advances          | Managed Object                                                                                | `N:M`                    | Typically a Roadmap Item or an epic work item.                                                                                     |
+| Project                                    | advances          | Managed Object                                                                                | `N:M`                    | Typically a Roadmap Item or an epic work item. Studio-native workbench relation, not an org-model mirror.                                                                                     |
 | Project                                    | organizes         | Workflow                                                                                      | `N:M`                    | The workbench: workflows gathered for the effort (§3.1).                                                                           |
 | Member                                     | links to          | Person (managed object)                                                                       | `0..1 : 0..1`            |                                                                                                                                    |
 | Member / Team                              | granted           | Role                                                                                          | `N:M`                    | Stored as **Role Grant** (grantee × role × scope).                                                                                 |
@@ -478,7 +478,7 @@ stateDiagram-v2
 
 ## 9. Organization-to-Studio Mapping
 
-First-pass mapping of the most important organization entities — every root domain plus the Work Management layer. The rest of the inventory is mapped on demand. Typical sources are examples, not commitments. **Division of labor with §2.2:** that table disambiguates shared *words*; this one maps *entities* — where a word collides, the guard lives in §2.2 and rows here only point at it.
+First-pass mapping of the most important organization entities — every root domain plus the Work Management layer. The rest of the inventory is mapped on demand. Rows the organization model now tiers **Mentioned** (Operations, most Commercial, External Dependencies, Strategy finance) are kept here for completeness but marked *(on-demand)* — shown when needed, not managed first. Typical sources are examples, not commitments. **Division of labor with §2.2:** that table disambiguates shared *words*; this one maps *entities* — where a word collides, the guard lives in §2.2 and rows here only point at it.
 
 | Organization entity (domain) | Studio object | Typical sources | Mirrored / authored | Where a member meets it |
 |---|---|---|---|---|
@@ -486,18 +486,18 @@ First-pass mapping of the most important organization entities — every root do
 | Person (Organizational Structure) | Person | HRIS, directory, Git/tracker accounts | mirrored | people directory, ownership panels |
 | Team (Organizational Structure) | Team — a managed object; ⚠️ may *seed* a Studio Team (§3.1), which then lives its own life | directory, Git groups, tracker teams | mirrored | team page, ownership panels |
 | Skill (Organizational Structure) | Skill; `Person has_skill` | HRIS, skills matrix, inferred from Git/tracker activity | mirrored or authored | people directory, staffing & matching |
-| Vision / Mission (Strategy) | Vision *(scoped: company / product — one active per scope)*, Mission — content-backed | vision decks, strategy docs | authored (mirrored if doc-tool-backed) | vision & strategy view; a Product surfaces its Product Vision |
+| Vision / Mission (Strategy) | Vision *(a company Vision `frames` Strategy; a product/line Vision guides one or more Products/Lines — each has ≤1, one Vision may cover several)*, Mission — content-backed | vision decks, strategy docs | authored (mirrored if doc-tool-backed) | vision & strategy view; a Product surfaces the Vision guiding it |
 | Objective (Strategy) | Objective | OKR tool, strategy documents | mirrored or authored | objectives overview |
-| Budget / Spend Record (Strategy) | Budget, Spend Record | finance systems | linked | investment & cost views 🔒 |
+| Budget / Spend Record (Strategy) | Budget, Spend Record | finance systems | linked *(on-demand)* | investment & cost views 🔒 |
 | Roadmap Item (Strategy) | Roadmap Item | roadmap tool, tracker | mirrored or authored | roadmap |
 | Competitor + Market Signal (Market) | Competitor, Market Signal | competitive-intelligence tools, research notes | authored + mirrored | competitive landscape 🔒 |
 | Product Line (Product) | Product Line | product catalog, docs | mirrored or authored | workspace product scope *(Studio has no Product Portfolio object; a cross-line view is Organization-scoped)* |
 | Product (Product) | Product | product catalog, wiki | mirrored or authored | product catalog |
 | Product Capability / Feature (Product) | Product Capability, Feature | wiki, PRDs, tracker components | mostly authored | capability map |
 | Requirement (Product) | Requirement — content-backed | PRD/spec docs, tracker | authored + mirrored | requirements / spec view |
-| Customer Account (Commercial) | Customer Account | CRM | mirrored (often *linked*) | account overview 🔒 |
-| Customer Agreement / Subscription (Commercial) | Customer Agreement, Subscription | CRM, billing | linked | commercial views 🔒 |
-| Deal / Support Case (Commercial) | Deal, Support Case | CRM, support desk | mirrored | pipeline & support views 🔒 |
+| Customer Account (Commercial) | Customer Account | CRM | mirrored (often *linked*) *(on-demand)* | account overview 🔒 |
+| Customer Agreement / Subscription (Commercial) | Customer Agreement, Subscription | CRM, billing | linked *(on-demand)* | commercial views 🔒 |
+| Deal / Support Case (Commercial) | Deal, Support Case | CRM, support desk | mirrored *(on-demand)* | pipeline & support views 🔒 |
 | Software System / Service (Software Estate) | Software System, Service | service catalog, infrastructure-as-code (IaC) definitions | mirrored | system / service catalog |
 | Repository (Software Estate) | Repository | GitHub, GitLab | mirrored | repository browser |
 | AI Model / AI Agent (Software Estate) | AI Model, AI Agent | model registry, agent platform | mirrored | AI estate & cost views |
@@ -505,11 +505,11 @@ First-pass mapping of the most important organization entities — every root do
 | Build / Release / Deployment (Delivery) | Build, Release, Deployment | CI/CD | mirrored | delivery timeline, release readiness |
 | Work Item (Work Management) | Work Item | Jira, Linear, Azure DevOps | mirrored | work views, backlog |
 | Project (Work Management) | **Project** — the same entity: mirrored from trackers or authored in Studio; Studio adopts it as a working project (adds scope + workflows) | tracker, project-management tool | mirrored or authored | project overview; working projects |
-| Incident (Operations) | Incident | PagerDuty, IT service-management (ITSM) tools | mirrored | operations feed |
-| SLO (service-level objective) + Operational Metric (Operations) | SLO, Operational Metric | monitoring | mirrored | health dashboards |
+| Incident (Operations) | Incident | PagerDuty, IT service-management (ITSM) tools | mirrored *(on-demand)* | operations feed |
+| SLO (service-level objective) + Operational Metric (Operations) | SLO, Operational Metric | monitoring | mirrored *(on-demand)* | health dashboards |
 | Policy / Control (Governance) | Policy — content-backed, Control | Confluence, governance-risk-compliance (GRC) tools | mirrored + authored | policy catalog, compliance view |
 | Evidence (Governance) | Governance Evidence — a managed object; ⚠️ distinct from Studio's own Evidence (§2.2, §6.1) | GRC tools, test and review records | mirrored + authored | compliance view, gate details |
-| Vendor / Third-Party Component / License (External Dependencies) | Vendor, Third-Party Component, License | software bill of materials (SBOM), procurement | mirrored / linked | dependency & license exposure 🔒 |
+| Vendor / Third-Party Component / License (External Dependencies) | Vendor, Third-Party Component, License | software bill of materials (SBOM), procurement | mirrored / linked *(on-demand)* | dependency & license exposure 🔒 |
 
 **Mapping conventions:**
 
