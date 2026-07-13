@@ -1,7 +1,7 @@
 ---
 type: foundation
 artifact: studio-representation-model
-status: draft-v0.8.13
+status: draft-v0.8.14
 date: 2026-07-13
 scope: studio-product
 language: en
@@ -468,7 +468,7 @@ stateDiagram-v2
 5. An imported relation is one logical fact, materialized in every knowledge graph where both its endpoints are included, and nowhere else; sync keeps every appearance identical.
 6. Access never propagates along relations; objects outside a member's projection render as locked stubs.
 7. Every identity merge/split, role grant, team membership change, kit publication, approval, write-back and agent action produces an audit entry.
-8. Organization-model entities that are **reified relationships** — relationships stored as their own records with attributes (Employment, Team Membership, Position Allocation, Reporting Line, Responsibility Assignment, Assignment, Skill possession, Dependency, Handoff) — arrive as **managed objects**, never as bare relations: their dates and attributes must survive.
+8. Organization-model entities that are **reified relationships** — relationships stored as their own records with attributes (Employment, Team Membership, Position Allocation, Reporting Line, Responsibility Assignment, Assignment, Competency possession, Dependency, Handoff) — arrive as **managed objects**, never as bare relations: their dates and attributes must survive.
 9. Candidate objects and prepared action runs are **not authoritative** until accepted by an approval (or an explicitly configured policy).
 10. A write-back action run requires source capability, actor permission, passing validation, approval and audit — all five.
 11. A terminology override changes labels, **never** canonical semantics or relationship meaning.
@@ -485,7 +485,7 @@ First-pass mapping of the most important organization entities — every root do
 | Organization (Organizational Structure) | represented by the Studio Tenant; also a managed object if useful | admin setup, directory | — | tenant administration |
 | Person (Organizational Structure) | Person | HRIS, directory, Git/tracker accounts | mirrored | people directory, ownership panels |
 | Team (Organizational Structure) | Team — a managed object; ⚠️ may *seed* a Studio Team (§3.1), which then lives its own life | directory, Git groups, tracker teams | mirrored | team page, ownership panels |
-| Skill (Organizational Structure) | Skill; `Person has_skill` | HRIS, skills matrix, inferred from Git/tracker activity | mirrored or authored | people directory, staffing & matching |
+| Competency (Organizational Structure) | Competency; `Person has_competency` | HRIS, skills matrix, inferred from Git/tracker activity | mirrored or authored | people directory, staffing & matching |
 | Vision / Mission (Strategy) | Vision *(a company Vision `frames` Strategy; a product/line Vision guides one or more Products/Lines — each has ≤1, one Vision may cover several)*, Mission — content-backed | vision decks, strategy docs | authored (mirrored if doc-tool-backed) | vision & strategy view; a Product surfaces the Vision guiding it |
 | Objective (Strategy) | Objective | OKR tool, strategy documents | mirrored or authored | objectives overview |
 | Budget / Spend Record (Strategy) | Budget, Spend Record | finance systems | linked *(on-demand)* | investment & cost views 🔒 |
@@ -495,6 +495,8 @@ First-pass mapping of the most important organization entities — every root do
 | Product (Product) | Product | product catalog, wiki | mirrored or authored | product catalog |
 | Product Capability / Feature (Product) | Product Capability, Feature | wiki, PRDs, tracker components | mostly authored | capability map |
 | Requirement (Product) | Requirement — content-backed | PRD/spec docs, tracker | authored + mirrored | requirements / spec view |
+| Spec & design artifacts (Product) | PRD, DESIGN Document, Design Artifact, Decomposition, Feature Spec, Impact/Coverage Report — content-backed managed objects (object = document, versioned) | wiki, Figma, PRD/spec docs, repo | authored + mirrored | spec / design view |
+| UI/UX Interactive PoC App (Product) | *linked* to a Repository / deployed preview — running code, not a content-backed doc | repo, preview host | linked | prototype / PoC gallery |
 | Customer Account (Commercial) | Customer Account | CRM | mirrored (often *linked*) *(on-demand)* | account overview 🔒 |
 | Customer Agreement / Subscription (Commercial) | Customer Agreement, Subscription | CRM, billing | linked *(on-demand)* | commercial views 🔒 |
 | Deal / Support Case (Commercial) | Deal, Support Case | CRM, support desk | mirrored *(on-demand)* | pipeline & support views 🔒 |
@@ -502,21 +504,21 @@ First-pass mapping of the most important organization entities — every root do
 | Repository (Software Estate) | Repository | GitHub, GitLab | mirrored | repository browser |
 | AI Model / AI Agent (Software Estate) | AI Model, AI Agent | model registry, agent platform | mirrored | AI estate & cost views |
 | Commit / Pull Request (Delivery) | Commit, Pull Request *(high-volume)* | Git platform | mirrored | change history, traceability |
-| Build / Release / Deployment (Delivery) | Build, Release, Deployment | CI/CD | mirrored | delivery timeline, release readiness |
+| Build / Release / Deployment (Delivery) | Build, Release, Deployment, Release Notes *(content-backed)*, SBOM | CI/CD, SBOM tooling | mirrored (Release Notes authored + mirrored) | delivery timeline, release readiness, dependency manifest |
 | Work Item (Work Management) | Work Item | Jira, Linear, Azure DevOps | mirrored | work views, backlog |
 | Project (Work Management) | **Project** — the same entity: mirrored from trackers or authored in Studio; Studio adopts it as a working project (adds scope + workflows) | tracker, project-management tool | mirrored or authored | project overview; working projects |
 | Incident (Operations) | Incident | PagerDuty, IT service-management (ITSM) tools | mirrored *(on-demand)* | operations feed |
 | SLO (service-level objective) + Operational Metric (Operations) | SLO, Operational Metric | monitoring | mirrored *(on-demand)* | health dashboards |
 | Policy / Control (Governance) | Policy — content-backed, Control | Confluence, governance-risk-compliance (GRC) tools | mirrored + authored | policy catalog, compliance view |
 | Evidence (Governance) | Governance Evidence — a managed object; ⚠️ distinct from Studio's own Evidence (§2.2, §6.1) | GRC tools, test and review records | mirrored + authored | compliance view, gate details |
-| Vendor / Third-Party Component / License (External Dependencies) | Vendor, Third-Party Component, License | software bill of materials (SBOM), procurement | mirrored / linked *(on-demand)* | dependency & license exposure 🔒 |
+| Vendor / Third-Party Component / License (External Dependencies) | Vendor, Third-Party Component, License | the SBOM object (Delivery §3.7), procurement | mirrored / linked *(on-demand)* | dependency & license exposure 🔒 |
 
 **Mapping conventions:**
 
 - **🔒 = role-restricted** — the view surfaces only to holders of the relevant grant (finance, commercial, security).
 - **Metrics.** Every organization `* Metric` term maps to one pattern: an object type from the **Metric family — always a domain specialization** (Product Metric, Operational Metric, …), never a generic `Metric` business object (the org model deliberately retired that; the family name is a modeling pattern, not an instantiable type) — attached to what it measures by the `measures` relation (§8.1). For **mirrored** metrics the series data stays in sources and Studio holds definition, current value and provenance; **Delivery Metric and Cost Metric are Studio-computed, never mirrored** (§6.3, §2.2).
 - **Decisions.** `Decision` and its specializations map to one **Decision** type with subtypes, usually content-backed (architecture decision records (ADRs), decision logs).
-- **Reified relationships** (Employment, Team Membership, Position Allocation, Assignment, Skill possession, Dependency, Handoff) map to **managed objects** — invariant 8.
+- **Reified relationships** (Employment, Team Membership, Position Allocation, Assignment, Competency possession, Dependency, Handoff) map to **managed objects** — invariant 8.
 - **Document-backed entities** (PRD, policy, postmortem, runbook) are **content-backed managed objects**: object and document are the same node, with versions.
 - **Functions** (the function overlay of the organization model) do not become containers: they appear through actor roles, assignments and views.
 - **Gaps.** A detected gap is a **Signal** — computed, never authored (invariant 14). Accepting it for work is a policy-allowed action that **authors a managed object** — typically an Opportunity or a Roadmap Item candidate — linked to its signal; that authored object carries the work lifecycle (the MVP's "pinned Gap"). Two entities, one UX card.

@@ -1,7 +1,7 @@
 ---
 type: foundation
 artifact: software-organization-domain-model
-status: draft-v0.9.4
+status: draft-v0.9.5
 date: 2026-07-13
 scope: software-organization
 language: en
@@ -79,7 +79,7 @@ The controlled set, grouped by intent:
 | Group | Predicates |
 | --- | --- |
 | **Structure & membership** | `contains` · `belongs_to` · `groups` · `packages` · `has_capability` · `member_of` · `party_to` |
-| **People & roles** | `employs` · `fills` · `reports_to` · `implies` · `in_role` · `plays_role_in` · `participates_in` · `has_skill` · `requires` |
+| **People & roles** | `employs` · `fills` · `reports_to` · `implies` · `in_role` · `plays_role_in` · `participates_in` · `has_competency` · `requires` |
 | **Ownership, assignment & access** | `has_owner` · `assigns` · `assigned_to` · `grants_access_to` · `granted_to` · `attributed_to` · `performed_by` |
 | **Strategy & direction** | `grounds` · `frames` · `drives` · `defines` · `informs` · `prioritizes` · `justified_by` |
 | **Roadmap & change** | `has_type` · `has_scope` · `has_horizon` · `has_planning_view` · `guided_by` · `targets` · `changes` · `realized_by` · `supports` · `addressed_by` |
@@ -121,8 +121,8 @@ erDiagram
 erDiagram
     Person }o--o{ Position : "fills"
     Position }o--o{ JobRole : "implies"
-    Person }o--o{ Skill : "has_skill"
-    Position }o--o{ Skill : "requires"
+    Person }o--o{ Competency : "has_competency"
+    Position }o--o{ Competency : "requires"
     Person ||--o{ Assignment : "receives"
     Assignment }o--o| Project : "assigns"
     Assignment }o--o| JobRole : "in_role"
@@ -132,7 +132,7 @@ erDiagram
     }
 ```
 
-**Worked example.** Anna is employed by a Legal Entity (*Employment*, dated). She fills the *Position* "Senior Engineer", which implies the *Job Roles* Developer and Security Lead — one person, several roles (`fills` `N:M` → `implies` `N:M`). She is a member of Team Atlas and of the Platform Guild (`member_of` `N:M`). She holds an *Assignment* on Project Phoenix `in_role` Tech Lead and another on Project Beacon `in_role` Reviewer — same person, two projects, two different roles. Her *profile* — strengths, expertise, history — is the derived view over these records plus her *Skills* (e.g., Kubernetes, level: expert, dated).
+**Worked example.** Anna is employed by a Legal Entity (*Employment*, dated). She fills the *Position* "Senior Engineer", which implies the *Job Roles* Developer and Security Lead — one person, several roles (`fills` `N:M` → `implies` `N:M`). She is a member of Team Atlas and of the Platform Guild (`member_of` `N:M`). She holds an *Assignment* on Project Phoenix `in_role` Tech Lead and another on Project Beacon `in_role` Reviewer — same person, two projects, two different roles. Her *profile* — strengths, expertise, history — is the derived view over these records plus her *Competencies* (e.g., Kubernetes, level: expert, dated).
 
 **Terms**
 
@@ -142,10 +142,10 @@ erDiagram
 | L3     | ↳ **Organization**               | A software-producing company or group of companies being modeled.                                                                                                                                                                                                                                                                                                                                           | **Secondary** |
 | L3     | ↳ **Legal Entity**               | A legally recognized entity associated with the Organization.                                                                                                                                                                                                                                                                                                                                               | **Secondary** |
 | L3     | ↳ **Organizational Unit**        | Business unit, department, division or practice inside the Organization.                                                                                                                                                                                                                                                                                                                                    | **Managed**     |
-| **L2** | **People, Employment & Skills**  | People known to the organization, their employment relationship and what they can do — capabilities, strengths, expertise.                                                                                                                                                                                                                                                                                  | **Managed**     |
+| **L2** | **People, Employment & Competencies**  | People known to the organization, their employment relationship and what they can do — capabilities, strengths, expertise.                                                                                                                                                                                                                                                                                  | **Managed**     |
 | L3     | ↳ **Person**                     | A real human being known to the Organization.                                                                                                                                                                                                                                                                                                                                                               | **Managed**     |
 | L3     | ↳ **Employment**                 | Dated relationship between a Person and a Legal Entity.                                                                                                                                                                                                                                                                                                                                                     | **Secondary** |
-| L3     | ↳ **Skill**                      | Named capability, expertise area or strength a Person can hold and a Position or Assignment can require — e.g., Kubernetes, payments domain expertise, incident command. Proficiency level and source (declared / assessed / derived) live on the possession record.                                                                                                                                        | **Managed**     |
+| L3     | ↳ **Competency**                 | Named capability, skill, expertise area or strength a Person can hold and a Position or Assignment can require — e.g., Kubernetes, payments domain expertise, incident command. Proficiency level and source (declared / assessed / derived) live on the possession record. | **Managed**     |
 | **L2** | **Positions & Reporting**        | Formal role slots and reporting structure.                                                                                                                                                                                                                                                                                                                                                                  | **Managed**     |
 | L3     | ↳ **Position**                   | Official role slot, title or function in the Organization.                                                                                                                                                                                                                                                                                                                                                  | **Managed**     |
 | L3     | ↳ **Reporting Line**             | Dated manager/report relationship from one Position to another.                                                                                                                                                                                                                                                                                                                                             | **Managed**     |
@@ -158,7 +158,7 @@ erDiagram
 | L3     | ↳ **Responsibility Assignment**  | Dated record that a Person or Team is accountable for a domain object.                                                                                                                                                                                                                                                                                                                                      | **Secondary** |
 | L3     | ↳ **Organizational Metric**      | Measures teams, positions, employment, staffing, responsibility coverage or team health.                                                                                                                                                                                                                                                                                                                    | **Secondary** |
 
-A person's **profile** (strengths, expertise, work history) is a derived view over Employment, Positions, Job Roles, Team Memberships, Assignments, Skills and authored work — not a stored entity, following the model's rule that views are not entities.
+A person's **profile** (strengths, expertise, work history) is a derived view over Employment, Positions, Job Roles, Team Memberships, Assignments, Competencies and authored work — not a stored entity, following the model's rule that views are not entities.
 
 **Relationships**
 
@@ -171,8 +171,8 @@ A person's **profile** (strengths, expertise, work history) is a derived view ov
 | Person                | fills           | Position                                           | `N:M`    | Position filling has effective dates.                                                                                                                                                                                                |
 | Person                | member_of       | Team                                               | `N:M`    | Through Team Membership; has effective dates.                                                                                                                                                                                        |
 | Person / Team         | participates_in | Project / Workstream                               | `N:M`    | Derived from Assignment records (§4); a person works on many projects, a project has many participants. `(Project, Job Role)` is **not unique** — a project may include several people in the *same* Job Role (e.g. two Product Managers).                                                                     |
-| Person                | has_skill       | Skill                                              | `N:M`    | Proficiency level, source and effective dates on the possession record.                                                                                                                                                              |
-| Position / Assignment | requires        | Skill                                              | `N:M`    | |
+| Person                | has_competency  | Competency                                         | `N:M`    | Proficiency level, source and effective dates on the possession record.                                                                                                                                                              |
+| Position / Assignment | requires        | Competency                                         | `N:M`    | |
 | Position | assigned_to | Team | `N:M` | Through Position Allocation; has effective dates. |
 | Position              | reports_to      | Position                                           | `N:1`    | Reporting Line has effective dates.                                                                                                                                                                                                  |
 | Position              | implies         | Job Role                                           | `N:M`    | Org-wide roles a title carries.                                                                                                                                                                                                      |
@@ -358,7 +358,8 @@ erDiagram
 | L3     | ↳ **Requirement**          | Atomic statement of what a Product or System must do or satisfy.                                   | **Managed** |
 | L3     | ↳ **Acceptance Criteria**  | Conditions that must be satisfied for a Requirement or Work Item to be accepted.                   | **Managed** |
 | L3     | ↳ **Capability Increment** | Bounded change to a Feature or Product Capability.                                                 | **Managed** |
-| L3     | ↳ **Design Artifact**      | Design output specifying user experience or interface: wireframe, prototype, design specification. | **Managed** |
+| L3     | ↳ **Design Artifact**      | Design output specifying user experience or interface: wireframe, design prototype (mock, not running code), design specification. | **Managed** |
+| L3     | ↳ **UI/UX Interactive PoC App** | Runnable proof-of-concept application in working code, built to validate a product experience; needs hosting and sharing, unlike a design prototype. | **Managed** |
 | L3     | ↳ **PRD**                  | Product Requirements Document — authored spec packaging Requirements, actors and success criteria for a product change. | **Managed** |
 | L3     | ↳ **DESIGN Document**      | System/architecture design document: components, interfaces and constraints; references Architecture Decisions.         | **Managed** |
 | L3     | ↳ **Decomposition**        | Ordered, dependency-linked FEATURE list derived from a DESIGN, with coverage back to Requirements.                      | **Managed** |
@@ -370,7 +371,7 @@ erDiagram
 | L3     | ↳ **EPSVS Scorecard**      | Periodic scorecard across efficiency, performance, scalability, versatility and security dimensions. | **Managed** |
 | **L2** | **Product Actors**         | People, customers and actors who receive value from or interact with a Product.                    | **Managed** |
 | L3     | ↳ **Customer**             | Individual, group or organization receiving value from a Product; may be internal or external.     | **Managed** |
-| L3     | ↳ **User**                 | Person or actor interacting with a Product or affected by its behavior.                            | **Managed** |
+| L3     | ↳ **User**                 | Person or system actor — including integrations and API clients — interacting with a Product or affected by its behavior. | **Managed** |
 | **L2** | **Product Decisions**      | Recorded choices about product direction, scope, trade-offs and prioritization.                    | **Managed** |
 | L3     | ↳ **Product Decision**     | Specialized Decision about product direction, scope, trade-off, roadmap or capability.             | **Managed** |
 
@@ -387,6 +388,8 @@ erDiagram
 | Capability Increment | changes | Feature / Product Capability | `N:M` | |
 | Design Artifact | specifies | Feature / Product Capability | `N:M` | |
 | Research Evidence / Customer Feedback | informs | Design Artifact | `N:M` |  |
+| UI/UX Interactive PoC App | validates | Feature / Requirement / Hypothesis | `N:M` | Working code (often AI-generated); a PoC that graduates lives on as a Repository. |
+| UI/UX Interactive PoC App | derived_from | Design Artifact / PRD | `N:M` | |
 | Opportunity | addressed_by | Roadmap Item / Requirement | `N:M` | |
 | Experiment | validates | Hypothesis | `N:M` |  |
 | Experiment | produces | Research Evidence / Insight / Product Metric | `N:M` | |
@@ -502,7 +505,7 @@ erDiagram
 | **L2** | **Systems & Components**          | Technical systems and components that realize products or internal platforms.                                                                                  | **Managed** |
 | L3     | ↳ **Software System**             | Technical system that implements part of a Product or internal platform.                                                                                       | **Managed** |
 | L3     | ↳ **Application**                 | User-facing or operator-facing deployable unit within or associated with a Software System.                                                                    | **Managed** |
-| L3     | ↳ **Service**                     | Deployable runtime unit exposing behavior to applications, systems or external consumers.                                                                      | **Managed** |
+| L3     | ↳ **Service**                     | Deployable runtime unit exposing behavior to applications, systems or external consumers; includes serverless functions and scheduled jobs/workflows.          | **Managed** |
 | L3     | ↳ **API**                         | Interface specification through which systems, services or external consumers interact.                                                                        | **Managed** |
 | L3     | ↳ **Software Component**          | Technical part of a Software System: module, adapter, deployable unit or infrastructure module. Consumed reusable packages are modeled as Library.             | **Managed** |
 | L3     | ↳ **Library**                     | Reusable code library or package consumed by applications, services or components; internal or third-party.                                                    | **Managed** |
@@ -551,6 +554,7 @@ The model intentionally avoids generic `Workspace` as a software-organization te
 | Tooling System | contains | Tool Workspace | `0..N` | |
 | Team / Project / Product / Software System / Repository | uses | Tool Workspace | `N:M` | Scoped inside a tool, not a generic organization container. |
 | Technology Stack | supports | Product / Software System / Team | `N:M` | |
+| Technology Stack | groups | Library / Tooling System / Infrastructure Resource / AI Model | `N:M` | Stack composition — a set over existing estate terms (databases, ORMs, frameworks are instances of these). |
 | Software System / Service / Tooling System | uses | AI Model | `N:M` |  |
 | Eval Run | evaluates | AI Model / Prompt Asset | `N:M` | |
 | Eval Run | produces | Evidence / Software Estate Metric | `1:N` | |
@@ -576,6 +580,7 @@ erDiagram
     TestRun }o--o{ WorkItem : "produces"
     Release }o--o{ BuildArtifact : "contains"
     Release ||--o{ ReleaseNotes : "produces"
+    SBOM }o--|| BuildArtifact : "describes"
     Deployment }o--|| Release : "deploys"
     Deployment }o--|| Environment : "targets"
 ```
@@ -590,7 +595,7 @@ erDiagram
 | L3     | ↳ **Pull Request**       | Proposed code change for review and merge.                                                    | **Managed** |
 | L3     | ↳ **Code Review**        | Review activity or record evaluating a Pull Request or code change before merge or release.   | **Managed** |
 | **L2** | **Build & Verification** | Build and test records proving that a change can work.                                        | **Managed** |
-| L3     | ↳ **Build**              | Build process result for a source revision: status, logs, metadata and produced artifacts.    | **Managed** |
+| L3     | ↳ **Build**              | Execution of a build for a source revision: status, logs, metadata and produced artifacts. The build *definition* is CI configuration versioned in a Repository (no separate term). | **Managed** |
 | L3     | ↳ **Build Artifact**     | Output of a build process: binary, container image, package or bundle.                        | **Managed** |
 | L3     | ↳ **Test Case**          | Test definition verifying behavior, requirement or quality condition.                         | **Managed** |
 | L3     | ↳ **Test Run**           | Execution of Test Cases.                                                                      | **Managed** |
@@ -599,6 +604,7 @@ erDiagram
 | L3     | ↳ **Release Decision**   | Specialized Decision for approving, rejecting or deferring a Release or Deployment.           | **Managed** |
 | L3     | ↳ **Deployment**         | Event/record of placing a Build Artifact or Release into an Environment.                      | **Managed** |
 | L3     | ↳ **Release Notes**      | Human-readable summary of what a Release changes: features, fixes, breaking changes, upgrade notes. | **Managed** |
+| L3     | ↳ **SBOM**               | Machine-readable bill of materials: components, libraries and licenses contained in a Build Artifact or Release. | **Managed** |
 | **L2** | **Change Traceability**  | Records and metrics that connect delivered change to scope, evidence and outcomes.            | **Managed** |
 | L3     | ↳ **Change Record**      | Record connecting a delivered change to its scope, evidence, decision and deployment context. | **Managed** |
 | L3     | ↳ **Delivery Metric**    | Measures delivery flow, throughput, quality, lead time, release readiness or effectiveness.   | **Managed** |
@@ -619,6 +625,7 @@ erDiagram
 | Code Review | produces | Evidence / Finding / Work Item | `N:M` | |
 | Build | validates | Commit / Pull Request | `N:M` | |
 | Build | produces | Build Artifact | `1:N` | |
+| Build | produces | Evidence / Finding | `N:M` | Security (SAST/DAST) and quality scans run inside the build; coverage and quality ratings are Delivery Metric instances. |
 | Test Case | verifies | Requirement / Acceptance Criteria | `N:M` | |
 | Test Run | executes | Test Case | `N:M` | |
 | Test Run | produces | Evidence / Work Item / Finding | `N:M` | |
@@ -631,6 +638,8 @@ erDiagram
 | Release Decision | decides_on | Release / Deployment | `N:M` |  |
 | Release | produces | Release Notes | `1:N` |  |
 | Release Notes | describes | Feature / Change Record / Release | `N:M` | Human-readable summary of shipped change. |
+| SBOM | describes | Build Artifact / Release | `N:1` | Version-bound dependency manifest; feeds vendor/component/license visibility (§3.10). |
+| SBOM | references | Library / Third-Party Component / License | `N:M` | |
 | Change Record | references | Work Item / Requirement / Pull Request / Release / Deployment / Evidence | `N:M` |  |
 
 ### 3.8 Operations
@@ -715,7 +724,7 @@ erDiagram
 | ------ | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------- | ------------ |
 | **L2** | **Rules & Expectations**       | Normative rules and expected practices.                                                                                    | **Managed**     |
 | L3     | ↳ **Policy**                   | Normative organizational rule, expectation or requirement.                                                                 | **Managed**     |
-| L3     | ↳ **Standard**                 | Required way of meeting a Policy or engineering/governance expectation.                                                    | **Managed**     |
+| L3     | ↳ **Standard**                 | Required way of meeting a Policy or engineering/governance expectation — e.g., a reference architecture, coding or review standard. | **Managed**     |
 | L3     | ↳ **Guideline**                | Recommended practice; not mandatory unless referenced by Policy/Standard.                                                  | **Managed**     |
 | **L2** | **Assurance & Evidence**       | Mechanisms for verifying and proving governance state.                                                                     | **Managed**     |
 | L3     | ↳ **Control**                  | Verifiable mechanism that implements a Policy or reduces a Risk.                                                           | **Managed**     |
@@ -872,7 +881,7 @@ erDiagram
 | Outcome | describes | Project / Workstream / Activity / Roadmap Item | `N:M` | |
 | Outcome | compared_against | Success Criteria | `N:M` |  |
 | Project | affects | Product / Software System / Data Asset / Risk | `N:M` | |
-| Project | uses | Repository | `N:M` | The repositories a project's work touches (People/Skills tie via Assignment). |
+| Project | uses | Repository | `N:M` | The repositories a project's work touches (People/Competencies tie via Assignment). |
 
 **Why Delivery and Operations are domain areas, not subareas of Work Management:** Work Management models the *coordination* of work (projects, work items, assignments). Delivery models the *records produced by the software change pipeline* (commits, pull requests, builds, releases, deployments). Operations models the *records produced by running systems* (telemetry, incidents, service health). The same real-world flow often crosses all three: an incident creates work items, the work is delivered through pull requests and deployments, and operations observes whether health recovered.
 
@@ -939,7 +948,7 @@ State lists are indicative vocabularies, not mandated workflows; organizations a
 4. A Requirement accepted for delivery has Acceptance Criteria.
 5. An Exception always has a scope and an expiry or review date.
 6. A Risk always has an owner, likelihood, impact and treatment status.
-7. Employment, Team Membership, Position Allocation, Reporting Line, Assignment, Responsibility Assignment and Skill possession carry effective dates.
+7. Employment, Team Membership, Position Allocation, Reporting Line, Assignment, Responsibility Assignment and Competency possession carry effective dates.
 8. Work performed by an AI Agent is attributed to that agent; accountability stays with a Person or Team.
 9. Metrics measure; decisions change. A metric never modifies a domain object directly — its influence flows through decisions, roadmaps and work.
 10. Every specialized Decision (business, product, architecture, risk acceptance, release) is a Decision and inherits its record fields.
