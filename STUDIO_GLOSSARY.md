@@ -15,8 +15,7 @@ tags:
 related:
   - "[[software-organization-domain-model]]"
   - "[[studio-representation-model]]"
-supersedes:
-  - "[[software-organization-glossary]]"
+supersedes: "software-organization-glossary (merged in and deleted 2026-07-13) + the former standalone studio-glossary"
 ---
 
 # Studio Glossary — Software Organization + Studio

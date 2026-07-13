@@ -12,7 +12,7 @@ tags:
   - domain-model
   - foundations
 related:
-  - "[[software-organization-glossary]]"
+  - "[[studio-glossary]]"
   - "[[studio-representation-model]]"
 ---
 
@@ -957,6 +957,6 @@ State lists are indicative vocabularies, not mandated workflows; organizations a
 
 ## Appendix A. 
 
-Everything else is content-identical to v0.8.09. Glossary rows for the new terms (Skill, Product License, Mission) and notes (Vision scope, `in_role`, `participates_in`) are pending in [[software-organization-glossary]].
+Everything else is content-identical to v0.8.09. Glossary rows for the new terms (now including Competency — renamed from Skill — Product License, Mission) and notes (Vision scope, `in_role`, `participates_in`) live in the unified [[studio-glossary]] (which superseded and replaced the former standalone software-organization glossary).
 
 **v0.9.2 — relationship-vocabulary consolidation.** The predicate set was normalized from 116 distinct verbs to a controlled set of 76 (see the *Relationship vocabulary* block in §3). No relationships were removed except three fully-redundant inverse rows (`Opportunity supported_by …`, `Pull Request has_review …`, and the duplicate `Risk mitigated_by …`); every other change is a rename or a subject/object flip to active voice. Applied by rule: (1) passive `…_by` forms folded into their active twin; (2) synonym clusters merged (`creates`/`generates`/`emits`/`creates_or_updates`/`may_create` → `produces`; `relates_to`/`links`/`connects` → `references`; `impacts`/`updates` → `affects`; `consumes`/`used_by`/`consumed_by` → `uses`; and others); (3) compound decision verbs (`approves_rejects_or_defers`, `accepts_rejects_or_prioritizes`, `accepts`) → `decides_on`, outcome carried as a Decision attribute. Parsed clean (unmatched=0).

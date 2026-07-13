@@ -17,7 +17,7 @@ tags:
   - foundations
 related:
   - "[[software-organization-domain-model]]"
-  - "[[software-organization-glossary]]"
+  - "[[studio-glossary]]"
 ---
 
 # Studio Domain Model
