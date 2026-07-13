@@ -16,7 +16,7 @@ related:
   - "[[studio-user-journeys]]"
 ---
 
-# Studio — Glossary of Terms (draft-v0.8.06)
+# Studio — Glossary of Terms
 
 > **Index of:** studio-representation-model@0.8.13 · software-organization-domain-model@0.9.3 · 2026-07-13. **A term absent from a model is not canonical.**
 
