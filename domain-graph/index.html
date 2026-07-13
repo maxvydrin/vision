@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Studio Domain Model — Interactive Graph</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <aside id="panel">
+        <header>
+          <div class="brand">Constructor Studio</div>
+          <h1>Domain Model Graph</h1>
+          <div class="sub" id="source-note">loading…</div>
+        </header>
+
+        <section class="control">
+          <h2>View</h2>
+          <div class="seg" id="view">
+            <button data-view="overview" class="active">Overview</button>
+            <button data-view="drilled">Explore all</button>
+          </div>
+          <p class="hint" id="view-hint">Start at the 10 domains, then open one to see its structure.</p>
+        </section>
+
+        <div id="drilled-controls" class="hidden">
+          <section class="control">
+            <h2>Depth</h2>
+            <div class="seg" id="depth">
+              <button data-depth="domain">Domains</button>
+              <button data-depth="block" class="active">Blocks</button>
+              <button data-depth="term">Terms</button>
+            </div>
+            <p class="hint">What the nodes are. Edges aggregate to the chosen level. Double-click a domain to open it.</p>
+          </section>
+
+          <section class="control">
+            <h2>Studio coverage</h2>
+            <label class="chk"><input type="checkbox" id="tier-managed" checked /><span class="dot managed"></span>Managed<span class="tier-cnt" id="cnt-managed"></span></label>
+            <label class="chk"><input type="checkbox" id="tier-secondary" /><span class="dot secondary"></span>Secondary<span class="tier-cnt" id="cnt-secondary"></span></label>
+            <label class="chk"><input type="checkbox" id="tier-mentioned" /><span class="dot mentioned"></span>Mentioned<span class="tier-cnt" id="cnt-mentioned"></span></label>
+            <p class="hint">Count per tier at the current depth, in the selected domains.</p>
+          </section>
+
+          <section class="control">
+            <h2>Domains <span id="dfilter-actions"><a data-all="1">all</a> · <a data-all="0">none</a></span></h2>
+            <div id="domain-filter"></div>
+          </section>
+
+          <section class="control">
+            <h2>Options</h2>
+            <label class="chk"><input type="checkbox" id="opt-crossonly" />Cross-domain edges only</label>
+            <label class="chk"><input type="checkbox" id="opt-alllabels" />Show all edge labels</label>
+            <p class="hint">Domains are laid out as separated baskets. Labels appear on hover / select; dashed = N:M.</p>
+          </section>
+        </div>
+
+        <section class="control">
+          <h2>Find</h2>
+          <input type="search" id="search" placeholder="term, block or domain…" autocomplete="off" />
+          <div id="search-results"></div>
+        </section>
+
+        <section class="control legend">
+          <h2>Legend</h2>
+          <div class="legend-row"><span class="dot managed"></span> Managed — manage first</div>
+          <div class="legend-row"><span class="dot secondary"></span> Secondary — cover on demand</div>
+          <div class="legend-row"><span class="dot mentioned"></span> Mentioned — known, not managed yet</div>
+          <div class="legend-row"><span class="dot meta"></span> Meta-scope (Domain Object / Function)</div>
+          <div class="legend-row"><span class="edge solid"></span> 1:1 / 1:N / N:1</div>
+          <div class="legend-row"><span class="edge dashed"></span> N:M (many-to-many)</div>
+          <div class="legend-row"><span class="swatch added"></span> added in a session</div>
+          <div class="legend-row"><span class="swatch moved"></span> moved / commented</div>
+          <div class="legend-row"><span class="edge proposed"></span> proposed link</div>
+        </section>
+
+        <div id="session-bar"></div>
+
+        <footer id="stats"></footer>
+      </aside>
+
+      <main id="stage">
+        <div id="overview"></div>
+        <div id="cy"></div>
+        <div id="stage-tools">
+          <button id="btn-fit" class="hidden" title="Fit graph to view">⤢ Fit</button>
+          <button id="btn-png" class="hidden" title="Download this view as a PNG image">↓ PNG</button>
+        </div>
+        <div id="focus-header" class="hidden"></div>
+        <div id="detail" class="hidden">
+          <div id="detail-head">
+            <span id="detail-title"></span>
+            <button id="detail-min" title="Collapse">–</button>
+            <button id="detail-close" aria-label="close" title="Close">×</button>
+          </div>
+          <div id="detail-body"></div>
+        </div>
+        <div id="tooltip" class="hidden"></div>
+        <div id="editor" class="hidden"></div>
+      </main>
+    </div>
+    <div id="sessions-modal" class="hidden"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
