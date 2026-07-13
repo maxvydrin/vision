@@ -1,7 +1,7 @@
 ---
 type: foundation
 artifact: software-organization-domain-model
-status: draft-v0.9.3
+status: draft-v0.9.4
 date: 2026-07-13
 scope: software-organization
 language: en
@@ -654,21 +654,21 @@ erDiagram
 
 | Level  | Term                              | Meaning                                                                                                  | Studio       |
 | ------ | --------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------ |
-| **L2** | **Runtime Observation**           | Runtime entities and the telemetry used to observe them.                                                 | **Mentioned**     |
-| L3     | ↳ **Runtime Instance**            | Running instance of an Application, Service, job, database, queue, model endpoint or other runtime unit. | **Mentioned**     |
-| L3     | ↳ **Telemetry Signal**            | Observed runtime signal: log, trace, metric, event or health check.                                      | **Mentioned**     |
-| L3     | ↳ **Operational Metric**          | Measures runtime, reliability, performance, availability or operational behavior.                        | **Mentioned**     |
-| L3     | ↳ **Alert**                       | Operational signal emitted by monitoring or observation.                                                 | **Mentioned**     |
-| **L2** | **Incident & Problem Management** | Operational disruptions, impact analysis and follow-up.                                                  | **Mentioned**     |
-| L3     | ↳ **Incident**                    | Disruption or operational event requiring response and follow-up.                                        | **Mentioned**     |
-| L3     | ↳ **Postmortem**                  | Analysis of an Incident and prevention actions.                                                          | **Mentioned**     |
-| L3     | ↳ **Customer Impact**             | Effect of an operational event on Customers, Customer Accounts, revenue, commitments or usage.           | **Mentioned**     |
-| L3     | ↳ **Problem**                     | Underlying or recurring cause behind incidents, defects or operational instability.                      | **Mentioned**     |
-| **L2** | **Reliability Management**        | Reliability objectives and service health state.                                                         | **Mentioned** |
-| L3     | ↳ **SLO**                         | Internal measurable reliability or service-level objective.                                              | **Mentioned** |
-| L3     | ↳ **Service Health**              | Current or historical view of whether a service is operating within expected thresholds.                 | **Mentioned** |
-| **L2** | **Operational Knowledge**         | Procedures used to run, diagnose and recover systems.                                                    | **Mentioned** |
-| L3     | ↳ **Runbook**                     | Operational procedure for running, diagnosing or recovering a system.                                    | **Mentioned** |
+| **L2** | **Runtime Observation**           | Runtime entities and the telemetry used to observe them.                                                 | **Secondary** |
+| L3     | ↳ **Runtime Instance**            | Running instance of an Application, Service, job, database, queue, model endpoint or other runtime unit. | **Secondary** |
+| L3     | ↳ **Telemetry Signal**            | Observed runtime signal: log, trace, metric, event or health check.                                      | **Secondary** |
+| L3     | ↳ **Operational Metric**          | Measures runtime, reliability, performance, availability or operational behavior.                        | **Secondary** |
+| L3     | ↳ **Alert**                       | Operational signal emitted by monitoring or observation.                                                 | **Secondary** |
+| **L2** | **Incident & Problem Management** | Operational disruptions, impact analysis and follow-up.                                                  | **Managed**   |
+| L3     | ↳ **Incident**                    | Disruption or operational event requiring response and follow-up.                                        | **Managed**   |
+| L3     | ↳ **Postmortem**                  | Analysis of an Incident and prevention actions.                                                          | **Managed**   |
+| L3     | ↳ **Customer Impact**             | Effect of an operational event on Customers, Customer Accounts, revenue, commitments or usage.           | **Managed**   |
+| L3     | ↳ **Problem**                     | Underlying or recurring cause behind incidents, defects or operational instability.                      | **Managed**   |
+| **L2** | **Reliability Management**        | Reliability objectives and service health state.                                                         | **Secondary** |
+| L3     | ↳ **SLO**                         | Internal measurable reliability or service-level objective.                                              | **Secondary** |
+| L3     | ↳ **Service Health**              | Current or historical view of whether a service is operating within expected thresholds.                 | **Secondary** |
+| **L2** | **Operational Knowledge**         | Procedures used to run, diagnose and recover systems.                                                    | **Managed**   |
+| L3     | ↳ **Runbook**                     | Operational procedure for running, diagnosing or recovering a system.                                    | **Managed**   |
 
 **Relationships**
 
