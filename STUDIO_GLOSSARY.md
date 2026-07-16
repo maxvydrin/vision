@@ -4,8 +4,8 @@ artifact: studio-glossary
 status: draft-v0.9.6
 date: 2026-07-16
 source:
-  - "[[software-organization-domain-model]]"
-  - "[[studio-product-domain-model]]"
+  - "software-organization-domain-model"
+  - "studio-product-domain-model"
   - STUDIO_VISION.md
 tags:
   - glossary
@@ -13,14 +13,14 @@ tags:
   - studio
   - foundations
 related:
-  - "[[software-organization-domain-model]]"
-  - "[[studio-product-domain-model]]"
+  - "software-organization-domain-model"
+  - "studio-product-domain-model"
 supersedes: "software-organization-glossary (merged in and deleted 2026-07-13) + the former standalone studio-glossary"
 ---
 
 # Studio Glossary — Software Organization + Studio
 
-> **Index of:** software-organization-domain-model@0.9.11 · studio-product-domain-model@0.9.24 · 2026-07-16. **A term absent from a model is not canonical.**
+> **Index of:** software-organization-domain-model · studio-product-domain-model · 2026-07-16. **A term absent from a model is not canonical.**
 
 One dictionary for both worlds. **Part A** — the software-organization domain (what exists in any software-producing company, independent of Studio). **Part B** — the Studio platform (how Studio represents and acts on that domain). Terms that mean the same everywhere appear **once**, with one shared definition. Terms whose meaning **diverges** between the organization model and Studio carry **both meanings in the same row**, marked ⚠️.
 
@@ -58,7 +58,7 @@ The words that mean different things in the organization model and in Studio. Fu
 
 ## Cross-layer alias table — one concept across all layers
 
-*The **canonical home** of the cross-layer naming map (D-072): the same concept named across the **organization model**, the **Studio product model**, the **kernel contract** [[studio-kernel-model]] (the **Studio Kernel Model**) and **STUDIO_VISION**. The product model's §2 points here rather than duplicating it. Resolve this map first; `—` = no term at that layer.*
+*The **canonical home** of the cross-layer naming map (D-072): the same concept named across the **organization model**, the **Studio product model**, the **kernel contract** studio-kernel-model (the **Studio Kernel Model**) and **STUDIO_VISION**. The product model's §2 points here rather than duplicating it. Resolve this map first; `—` = no term at that layer.*
 
 | Concept | Organization model | Studio product model | Kernel contract | VISION |
 |---|---|---|---|---|

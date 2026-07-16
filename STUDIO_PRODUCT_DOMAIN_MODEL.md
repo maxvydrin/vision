@@ -5,12 +5,12 @@ status: draft-v0.9.24
 date: 2026-07-16
 scope: studio-product
 language: en
-conforms-to: "[[studio-kernel-model]]"
+conforms-to: "studio-kernel-model"
 source:
-  - "[[software-organization-domain-model]]"
+  - "software-organization-domain-model"
   - STUDIO_VISION.md
   - STUDIO_ARCH_VISION.md
-  - "[[studio-domain-model-reconciliation-v2]] (conformance record)"
+  - "studio-domain-model-reconciliation-v2 (conformance record)"
   - Product decisions and naming revisions, 2026-07-12
 tags:
   - studio
@@ -19,11 +19,11 @@ tags:
   - mapping
   - foundations
 related:
-  - "[[software-organization-domain-model]]"
-  - "[[studio-glossary]]"
-  - "[[studio-kernel-model]]"
-  - "[[studio-domain-model-reconciliation-v2]]"
-  - "[[studio-decision-register]]"
+  - "software-organization-domain-model"
+  - "studio-glossary"
+  - "studio-kernel-model"
+  - "studio-domain-model-reconciliation-v2"
+  - "studio-decision-register"
 ---
 
 # Studio Product Domain Model
@@ -32,7 +32,7 @@ related:
 
 ## 0. The Whole Model On One Page
 
-The organization's domain model ([[software-organization-domain-model]]) describes **reality**: people, products, code, releases, incidents, policies. Studio does not replace that reality — it **represents** it, and then **moves work forward** on top of the representation.
+The organization's domain model (software-organization-domain-model) describes **reality**: people, products, code, releases, incidents, policies. Studio does not replace that reality — it **represents** it, and then **moves work forward** on top of the representation.
 
 > An **Organization** gets a **Tenant**. Connectors pull records from the organization's tools; identity mapping turns them into **managed objects**, each owned by one workspace. A **Workspace** is Studio's working context for one purpose (typically a product line): the objects it **owns**, together with the **relations** among them, form its **Knowledge Graph** — graph and identity both live at workspace level. Objects are workspace-local; the only cross-workspace operation is **copy** — no shared object across workspaces (a shared identity for non-edited things is a proposed future direction — §3.1.1). Inside a workspace, a **Project** — an effort that is itself an object in the graph — gathers the objects it touches and drives them to an outcome. **Members** work through **views**, seeing exactly what their **roles** allow. On top of the mirror, **workflows** run **actions**: Studio computes **findings** — gaps, drift, contradictions — prepares recommendations, validates candidates against **quality gates** attaching **evidence** — a validator may be a rule, a test, a model or a **person reviewing** — and, only after **approval**, writes back to the source tools. **Kits** package the domain knowledge all of this runs on — object types, templates, workflows, validators, **Gears** building blocks — and a workspace installs them. *(How you adapt a kit to your organization — rename, re-value, re-type, re-structure — is the four-rung map in §7.)*
 
@@ -118,13 +118,13 @@ flowchart LR
 
 ## 1. Frame
 
-**This document is** the domain model of Studio (the product): the entities that exist *only because Studio exists*, their relationships and invariants, and the mapping from each organization entity to its Studio object. It **takes the organization's domain model ([[software-organization-domain-model]]) as its reference** — the entities Studio represents are drawn from there, and no organization entity is redefined here. **It is not** that organization model itself, an information architecture or screen design (downstream, with the UX team), or a storage / sync architecture.
+**This document is** the domain model of Studio (the product): the entities that exist *only because Studio exists*, their relationships and invariants, and the mapping from each organization entity to its Studio object. It **takes the organization's domain model (software-organization-domain-model) as its reference** — the entities Studio represents are drawn from there, and no organization entity is redefined here. **It is not** that organization model itself, an information architecture or screen design (downstream, with the UX team), or a storage / sync architecture.
 
-**It sits above the Studio Kernel Model** ([[studio-kernel-model]]) as one of two co-normative layers. The kernel is normative for mechanics — identity, versioning, execution, authorization, audit — which this document adopts **by reference and never restates** (a rule only code can verify lives in the kernel; here live the principle and the scenario). This document is normative for the product domain; where the two appear to conflict, it is a defect, resolved in the decision register.
+**It sits above the Studio Kernel Model** (studio-kernel-model) as one of two co-normative layers. The kernel is normative for mechanics — identity, versioning, execution, authorization, audit — which this document adopts **by reference and never restates** (a rule only code can verify lives in the kernel; here live the principle and the scenario). This document is normative for the product domain; where the two appear to conflict, it is a defect, resolved in the decision register.
 
 ## 2. Names And Aliases
 
-This doc uses one shared dictionary — [[studio-glossary]]. A few entities, for structural reasons, carry different names across the organization model, this product model and the kernel contract; those are reconciled in the glossary's **cross-layer alias table**.
+This doc uses one shared dictionary — studio-glossary. A few entities, for structural reasons, carry different names across the organization model, this product model and the kernel contract; those are reconciled in the glossary's **cross-layer alias table**.
 
 ## 3. Studio's World
 
@@ -376,7 +376,7 @@ Cost is a **first-class, computed layer**, not an afterthought: every model call
 
 ### 6.4 Adopted from the kernel contract (by reference)
 
-The kernel contract ([[studio-kernel-model]]) is normative for execution mechanics. This model adopts the following **by reference — as principles, never re-specified machinery**:
+The kernel contract (studio-kernel-model) is normative for execution mechanics. This model adopts the following **by reference — as principles, never re-specified machinery**:
 
 - **Exact version binding.** Every governed run pins its exact inputs — object versions, policy versions, approval evidence, connector version, an idempotency key — and write-backs return **effect receipts**. Without this, the golden thread and the cost metrics are unprovable.
 - **Retry is a new run**, with lineage to its predecessor; a run is never mutated and re-run.
@@ -686,7 +686,7 @@ Output: a real cross-line view today (aggregates + per-workspace drill),
 
 ### Decided — modeling rationale not captured by an invariant or entity
 
-*Status arbiter: [[studio-decision-register]] (one row per decision). This appendix keeps **only rationale encoded nowhere else** — reasoning not already stated by an invariant (§8.2) or an entity table. Decisions fully realized by an invariant/entity (D-018–D-023, D-025, D-027–D-032, D-061, D-063–D-065, D-067–D-076) live only in the register; **D-017 is superseded by D-058 and dropped.** *(D-016 and D-024 carry their topology rule in the register but keep their **rationale** below — the "why the one sanctioned cross-tenant move" reasoning.)*
+*Status arbiter: studio-decision-register (one row per decision). This appendix keeps **only rationale encoded nowhere else** — reasoning not already stated by an invariant (§8.2) or an entity table. Decisions fully realized by an invariant/entity (D-018–D-023, D-025, D-027–D-032, D-061, D-063–D-065, D-067–D-076) live only in the register; **D-017 is superseded by D-058 and dropped.** *(D-016 and D-024 carry their topology rule in the register but keep their **rationale** below — the "why the one sanctioned cross-tenant move" reasoning.)*
 
 - **D-058 — identity is workspace-local; three layers.** The three layers exist for a reason the invariants (2/5/15) don't state: **control-plane citizens** carry authorization (never the graph), **graph objects** are workspace-local domain data, **Citizen Stand-ins** are kit-created, non-authoritative stand-ins for citizens when a workspace needs one *on* the graph. Same real subject in two workspaces = two independent objects (K-IDENT-01..07). Supersedes D-017.
 - **D-059 — cross-workspace = correlation layer (phase 2).** Cross-line summaries are built **above** workspaces via correlation IDs + correspondence records — non-authoritative, never a recreated tenant registry (K-IDENT-07). Conformant home: a dedicated aggregation workspace (its "unified person" is a *new correlated local object*, not the same identity) and/or app-level composition over opaque keys — side-by-side, never one object across lines. The conformant *fallback* if the proposed kernel changes (App. D) is refused; the product bets on the proposed kernel changes (App. D) for object-level cross-line.
@@ -697,7 +697,7 @@ Output: a real cross-line view today (aggregates + per-workspace drill),
 
 **Boundary (out of scope, D-026):** client access — CLI / IDE / MCP / API tokens — is per-member **configuration, not domain entities** (like commercial packaging). Noted so it isn't mistaken for a missing entity.*
 
-*Open questions live in [[studio-decision-register]] (rows with status `open`) — not duplicated here.*
+*Open questions live in studio-decision-register (rows with status `open`) — not duplicated here.*
 
 ## Appendix B. Lifecycles
 
@@ -789,7 +789,7 @@ One row per entity: the states an instance passes through, from creation to reti
 | *illustrative per-type* | Work Item planned estimate/cost | editable (Studio augmentation, rule 1) |
 | | Spend Record actual / Capacity Utilization | system (computed) |
 
-*Which layer's contract **defines/seals** a field is not classified here (it is an architecture concern): `read-only` mechanism fields — id, version, audit, run `executionState`, `parentTenantId`, pinned type version — are owned by the kernel contract ([[studio-kernel-model]]); domain fields are defined by their **kit** (GTS type). The glossary ▸ Cross-layer alias table maps each concept to its kernel term.*
+*Which layer's contract **defines/seals** a field is not classified here (it is an architecture concern): `read-only` mechanism fields — id, version, audit, run `executionState`, `parentTenantId`, pinned type version — are owned by the kernel contract (studio-kernel-model); domain fields are defined by their **kit** (GTS type). The glossary ▸ Cross-layer alias table maps each concept to its kernel term.*
 
 ## Out Of Scope Of This Document
 

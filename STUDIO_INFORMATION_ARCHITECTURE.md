@@ -4,16 +4,16 @@ artifact: studio-information-architecture
 status: draft-v0.8.15
 date: 2026-07-13
 tags: [studio, information-architecture, ux, foundations]
-related: ["[[studio-product-domain-model]]", "[[software-organization-domain-model]]"]
+related: ["studio-product-domain-model", "software-organization-domain-model"]
 ---
 
 # Studio Information Architecture
 
-Navigation architecture for Constructor Studio, projected from [[studio-product-domain-model]] (the canonical Studio domain model, studio-product-domain-model@0.8.12). Root reading: `Workspaces` · **SUPPLY** (`Integrations · Kits · Ontology · Gears`) · **CONTROL** (`Members & Access · Governance · Account`) + per-member Personal settings. Scope model = **Tenant root**: **Tenant → Workspace → Project** — a Tenant is one organization's Studio instance; a **Workspace** is the working context for one purpose (typically a product line) and **owns its Knowledge Graph**; a **Project** is the effort container (≈ what trackers call an epic / initiative — colloquial, not the org-model Strategic Initiative) inside a workspace.
+Navigation architecture for Constructor Studio, projected from studio-product-domain-model (the canonical Studio domain model, studio-product-domain-model). Root reading: `Workspaces` · **SUPPLY** (`Integrations · Kits · Ontology · Gears`) · **CONTROL** (`Members & Access · Governance · Account`) + per-member Personal settings. Scope model = **Tenant root**: **Tenant → Workspace → Project** — a Tenant is one organization's Studio instance; a **Workspace** is the working context for one purpose (typically a product line) and **owns its Knowledge Graph**; a **Project** is the effort container (≈ what trackers call an epic / initiative — colloquial, not the org-model Strategic Initiative) inside a workspace.
 
 ## Navigation tree
 
-*Reading key: `§n` and `invariant n` cite [[studio-product-domain-model]].*
+*Reading key: `§n` and `invariant n` cite studio-product-domain-model.*
 
 ```
 Studio Tenant                         one organization's Studio instance · commercial packaging = configuration, not entities
@@ -200,7 +200,7 @@ Single-workspace tenant:                            the workspace's children hoi
 
 ## MVP overlay (D-054)
 
-*The tree above is the **target** navigation. The MVP renders the subset below — the IA↔MVP delta map, decided 2026-07-13 (register D-054); build detail + seed states live in [[studio-mvp-scope]] ▸ "MVP screens / surfaces". Statuses: **FULL** (design + build) · **THIN** (minimal) · **READ-ONLY** (view only) · **HIDDEN** (exists in the model, not rendered in the MVP tenant shape) · **LATER** (deferred to Phase 3/4). A node absent from the table inherits its parent's status.*
+*The tree above is the **target** navigation. The MVP renders the subset below — the IA↔MVP delta map, decided 2026-07-13 (register D-054); build detail + seed states live in studio-mvp-scope ▸ "MVP screens / surfaces". Statuses: **FULL** (design + build) · **THIN** (minimal) · **READ-ONLY** (view only) · **HIDDEN** (exists in the model, not rendered in the MVP tenant shape) · **LATER** (deferred to Phase 3/4). A node absent from the table inherits its parent's status.*
 
 | IA node | MVP | Note |
 |---|---|---|
@@ -264,7 +264,7 @@ Single-workspace tenant:                            the workspace's children hoi
 
 ## Related
 
-- [[studio-product-domain-model]] — canonical Studio domain model (@0.8.12)
-- [[software-organization-domain-model]] — canonical organization domain model
+- studio-product-domain-model — canonical Studio domain model
+- software-organization-domain-model — canonical organization domain model
 - `egor/STUDIO Information Architecture` — Egor's draft this responds to
 - `v3.9 - Studio Information Architecture.xmind` — the earlier IA-track map (Max-owned, **retired 2026-07-13** — this document is canonical)

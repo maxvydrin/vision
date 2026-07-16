@@ -12,8 +12,8 @@ tags:
   - domain-model
   - foundations
 related:
-  - "[[studio-glossary]]"
-  - "[[studio-product-domain-model]]"
+  - "studio-glossary"
+  - "studio-product-domain-model"
 ---
 
 # Software Organization Domain Model
@@ -45,13 +45,13 @@ Tables use short codes: `L2` = block, `L3` = term. Domains need no code because 
 - every **term** and its meaning → §3 (domains), §4 (work management), §5 (functions);
 - every **relationship**, with multiplicity (`1:1` / `1:N` / `N:M`) → the **Relationships** table inside each domain section (legend and conventions at the top of §3);
 - **lifecycles** (state vocabularies) and **invariants** (rules that always hold) → §6;
-- the **Studio** column on each block → **our proposal of what Studio should cover**, validated against [[studio-product-domain-model]] §9 (Organization-to-Studio Mapping): `Managed` = Studio represents and manages first · `Secondary` = covered on demand (often mirrored or linked; commercial and financial views role-restricted) · `Mentioned` = known but not managed yet ("mapped on demand"). It is an organization-side proposal — the Studio Product Domain Model stays authoritative for what Studio actually covers.
+- the **Studio** column on each block → **our proposal of what Studio should cover**, validated against studio-product-domain-model §9 (Organization-to-Studio Mapping): `Managed` = Studio represents and manages first · `Secondary` = covered on demand (often mirrored or linked; commercial and financial views role-restricted) · `Mentioned` = known but not managed yet ("mapped on demand"). It is an organization-side proposal — the Studio Product Domain Model stays authoritative for what Studio actually covers.
 
-**Example value lists are open enumerations.** Where a term lists sample values — Work Item types, Roadmap types, Environment types, SLO tiers, cost units — the list is **defaults/examples, not a closed set**. Studio makes such sets editable per workspace as a **Reference Catalog** ([[studio-product-domain-model]] §7). Sets whose values carry logic (e.g. a Finding's provenance) are *not* open — they are fixed schema.
+**Example value lists are open enumerations.** Where a term lists sample values — Work Item types, Roadmap types, Environment types, SLO tiers, cost units — the list is **defaults/examples, not a closed set**. Studio makes such sets editable per workspace as a **Reference Catalog** (studio-product-domain-model §7). Sets whose values carry logic (e.g. a Finding's provenance) are *not* open — they are fixed schema.
 
 ## 2. Purpose
 
-This document is the **organization-side canon** of the foundation set: the shared vocabulary of a software-producing organization — terms, relationships with multiplicity, lifecycles and invariants — described independently of any modeling platform. Its companion [[studio-product-domain-model]] defines how Studio represents and acts on this domain; here this model is authoritative for what the organization *is*. The domain set is initial, extended in later passes.
+This document is the **organization-side canon** of the foundation set: the shared vocabulary of a software-producing organization — terms, relationships with multiplicity, lifecycles and invariants — described independently of any modeling platform. Its companion studio-product-domain-model defines how Studio represents and acts on this domain; here this model is authoritative for what the organization *is*. The domain set is initial, extended in later passes.
 
 ## 3. Domain Layer
 
@@ -71,7 +71,7 @@ Each domain section has three synchronized views: a **diagram** of the core enti
 
 *Time on relationships.* A relationship that holds only for a period — employment, team membership, an assignment, a subscription — is **not dated on the edge**; it is **reified** as a record entity carrying `valid from` / `valid to` (open `to` = still active; superseded periods are versions of the same record). The plain edge is the **current-state** view over those records. Invariant 7 lists the records that must carry dates.
 
-*Studio coverage (the `Studio` column).* Each L2 block (and §4 term) carries a **Studio** tier — the organization side's proposal of what Studio should cover, validated against [[studio-product-domain-model]] §9: **Managed** = manage first · **Secondary** = cover on demand · **Mentioned** = known, not managed yet. L3 inherits its block's tier. It is a proposal, not organization-model semantics — the Studio Product Domain Model is authoritative.
+*Studio coverage (the `Studio` column).* Each L2 block (and §4 term) carries a **Studio** tier — the organization side's proposal of what Studio should cover, validated against studio-product-domain-model §9: **Managed** = manage first · **Secondary** = cover on demand · **Mentioned** = known, not managed yet. L3 inherits its block's tier. It is a proposal, not organization-model semantics — the Studio Product Domain Model is authoritative.
 
 *Relationship vocabulary (the `Predicate` column).* Predicates are drawn from a **controlled set** — new relationships reuse an existing predicate rather than coin a synonym. Two conventions keep the set small:
 
@@ -540,7 +540,7 @@ erDiagram
 | L3     | ↳ **Software Estate Metric**      | Measures systems, applications, services, repositories, components, data assets, tooling or technology stack.                                                  | **Secondary** |
 
 
-The model intentionally avoids generic `Workspace` as a software-organization term. Real organizations have tool-specific workspaces; those are modeled as `Tool Workspace`. Product-side workspace concepts belong to the product's own domain model (see [[studio-product-domain-model]]).
+The model intentionally avoids generic `Workspace` as a software-organization term. Real organizations have tool-specific workspaces; those are modeled as `Tool Workspace`. Product-side workspace concepts belong to the product's own domain model (see studio-product-domain-model).
 
 **Relationships**
 
@@ -925,7 +925,7 @@ Common development tracker labels are modeled as `Work Item Type` values — con
 
 ## 5. Function Overlay
 
-Functions describe who participates. Functions never hold accountable ownership (invariant 1) — they participate in work routing (assignment, handoff). On the Studio side, functions do not become containers or objects — they appear through actor roles, assignments and views ([[studio-product-domain-model]] §9). The **Studio** column flags which functions Studio is built to serve (Vision §4.4): **Product Management**, **R&D / Engineering**, **Design / UX**, **DevOps / SRE**, **Customer Success** and **QA** are **Managed** (represent first); Product Marketing, GTM / Sales, Security / Compliance, People Ops and Internal IT are **Secondary** (cover on demand); Finance, Legal and Procurement stay **Mentioned**. The tier signals how far Studio models the function's participation, not object ownership (invariant 1 still holds).
+Functions describe who participates. Functions never hold accountable ownership (invariant 1) — they participate in work routing (assignment, handoff). On the Studio side, functions do not become containers or objects — they appear through actor roles, assignments and views (studio-product-domain-model §9). The **Studio** column flags which functions Studio is built to serve (Vision §4.4): **Product Management**, **R&D / Engineering**, **Design / UX**, **DevOps / SRE**, **Customer Success** and **QA** are **Managed** (represent first); Product Marketing, GTM / Sales, Security / Compliance, People Ops and Internal IT are **Secondary** (cover on demand); Finance, Legal and Procurement stay **Mentioned**. The tier signals how far Studio models the function's participation, not object ownership (invariant 1 still holds).
 
 | Function | Participates mainly in | Notes | Studio |
 | --- | --- | --- | --- |
@@ -984,5 +984,5 @@ State lists are indicative vocabularies, not mandated workflows; organizations a
 
 ## Appendix A. Supersession note
 
-This document is the canonical software-organization domain model. It **superseded `v0.8.09`** in a full rewrite (2026-07-13); the predecessor file and the earlier Level-1/Level-2 drafts were removed. Since then it has grown by decision (register): Competency rename (was Skill), SBOM/Release Notes (§3.7), Work Item `estimate`/`cost` + `Spend Record → Work Item` (D-068), the planning half of Operations — Error Budget, Capacity & Continuity Planning, DORA, change-type/window, region/DR (D-069), Person/Team **Capacity** + `has_capacity` (D-075), and open-enumeration marks (D-076). Status/date in the frontmatter track the latest such change; per-decision history lives in [[studio-decision-register]]. 
+This document is the canonical software-organization domain model. It **superseded `v0.8.09`** in a full rewrite (2026-07-13); the predecessor file and the earlier Level-1/Level-2 drafts were removed. Since then it has grown by decision (register): Competency rename (was Skill), SBOM/Release Notes (§3.7), Work Item `estimate`/`cost` + `Spend Record → Work Item` (D-068), the planning half of Operations — Error Budget, Capacity & Continuity Planning, DORA, change-type/window, region/DR (D-069), Person/Team **Capacity** + `has_capacity` (D-075), and open-enumeration marks (D-076). Status/date in the frontmatter track the latest such change; per-decision history lives in studio-decision-register. 
 
