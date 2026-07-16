@@ -1,19 +1,19 @@
 ---
 type: information-architecture
 artifact: studio-information-architecture
-status: draft-v0.8.14
+status: draft-v0.8.15
 date: 2026-07-13
 tags: [studio, information-architecture, ux, foundations]
-related: ["[[studio-representation-model]]", "[[software-organization-domain-model]]"]
+related: ["[[studio-product-domain-model]]", "[[software-organization-domain-model]]"]
 ---
 
 # Studio Information Architecture
 
-Navigation architecture for Constructor Studio, projected from [[studio-representation-model]] (the canonical Studio domain model, studio-representation-model@0.8.12). Root reading: `Workspaces` · **SUPPLY** (`Integrations · Kits · Ontology · Gears`) · **CONTROL** (`Members & Access · Governance · Account`) + per-member Personal settings. Scope model = **Tenant root**: **Tenant → Workspace → Project** — a Tenant is one organization's Studio instance; a **Workspace** is the working context for one purpose (typically a product line) and **owns its Knowledge Graph**; a **Project** is the effort container (≈ what trackers call an epic / initiative — colloquial, not the org-model Strategic Initiative) inside a workspace.
+Navigation architecture for Constructor Studio, projected from [[studio-product-domain-model]] (the canonical Studio domain model, studio-product-domain-model@0.8.12). Root reading: `Workspaces` · **SUPPLY** (`Integrations · Kits · Ontology · Gears`) · **CONTROL** (`Members & Access · Governance · Account`) + per-member Personal settings. Scope model = **Tenant root**: **Tenant → Workspace → Project** — a Tenant is one organization's Studio instance; a **Workspace** is the working context for one purpose (typically a product line) and **owns its Knowledge Graph**; a **Project** is the effort container (≈ what trackers call an epic / initiative — colloquial, not the org-model Strategic Initiative) inside a workspace.
 
 ## Navigation tree
 
-*Reading key: `§n` and `invariant n` cite [[studio-representation-model]].*
+*Reading key: `§n` and `invariant n` cite [[studio-product-domain-model]].*
 
 ```
 Studio Tenant                         one organization's Studio instance · commercial packaging = configuration, not entities
@@ -179,7 +179,7 @@ Single-workspace tenant:                            the workspace's children hoi
 
 ## Layer mapping (IA area → model section)
 
-| IA area                                                          | studio-representation-model section                                                                 |
+| IA area                                                          | studio-product-domain-model section                                                                 |
 | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | Studio Tenant / Workspaces / Projects / Members                  | §3.1 Containers and people                                                                          |
 | Objects (browser, detail, new-from-template, saved views, inclusion) | §3.2 Objects and relations + §3.3 View (saved browsers) + §4 provenance/sync + §7 Template      |
@@ -264,7 +264,7 @@ Single-workspace tenant:                            the workspace's children hoi
 
 ## Related
 
-- [[studio-representation-model]] — canonical Studio domain model (@0.8.12)
+- [[studio-product-domain-model]] — canonical Studio domain model (@0.8.12)
 - [[software-organization-domain-model]] — canonical organization domain model
 - `egor/STUDIO Information Architecture` — Egor's draft this responds to
 - `v3.9 - Studio Information Architecture.xmind` — the earlier IA-track map (Max-owned, **retired 2026-07-13** — this document is canonical)

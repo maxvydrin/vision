@@ -1,8 +1,8 @@
 ---
 type: foundation
 artifact: software-organization-domain-model
-status: draft-v0.9.5
-date: 2026-07-13
+status: draft-v0.9.11
+date: 2026-07-16
 scope: software-organization
 language: en
 supersedes: "v0.8.09 — full rewrite 2026-07-13 (predecessor file removed; see Appendix A)"
@@ -13,7 +13,7 @@ tags:
   - foundations
 related:
   - "[[studio-glossary]]"
-  - "[[studio-representation-model]]"
+  - "[[studio-product-domain-model]]"
 ---
 
 # Software Organization Domain Model
@@ -22,10 +22,12 @@ related:
 
 This document defines the domain model of a software-producing organization: the terms it uses, how those terms relate to each other (and in what numbers), how they change over time, and the rules that always hold.
 
+This is the **reference model used to validate the Studio model** — the *Studio Product Domain Model* (`studio-product-domain-model`) is checked against the reality described here. This document is not renamed; it stays the organization reference.
+
 **The model has three dimensions.** They describe different kinds of things, and the whole point of the model is to keep them separate rather than flatten them into one hierarchy:
 
 - **The Domain Layer — what exists (§3).** The ten stable areas of a software organization: Organizational Structure & People, Strategy, Market, Product, Commercial, Software Estate, Delivery, Operations, Governance, and External Dependencies.
-- **The Work Management Layer — how change is coordinated (§4).** The constructs that move work across those areas: Project, Workstream, Work Item, Assignment, Milestone, Handoff. This layer coordinates change in every domain.
+- **The Work Management Layer — how change is coordinated (§4).** The constructs that move work across those areas: Project, Workstream, Work Item (the tracked unit of work people actually pick up — an epic, a user story, a task, a bug, a spike, an incident follow-up), Assignment, Milestone, Handoff. This layer coordinates change in every domain.
 - **The Function Overlay — who participates (§5).** The organizational functions that do the work: Product Management, Engineering, QA, Sales, Security, and so on. Functions staff and take part in work management.
 
 Put simply: the domains say **what exists**, work management says **how it changes**, and functions say **who is involved**. The same initiative touches all three, but they stay distinct kinds of things.
@@ -43,11 +45,13 @@ Tables use short codes: `L2` = block, `L3` = term. Domains need no code because 
 - every **term** and its meaning → §3 (domains), §4 (work management), §5 (functions);
 - every **relationship**, with multiplicity (`1:1` / `1:N` / `N:M`) → the **Relationships** table inside each domain section (legend and conventions at the top of §3);
 - **lifecycles** (state vocabularies) and **invariants** (rules that always hold) → §6;
-- the **Studio** column on each block → **our proposal of what Studio should cover**, validated against [[studio-representation-model]] §9 (Organization-to-Studio Mapping): `Managed` = Studio represents and manages first · `Secondary` = covered on demand (often mirrored or linked; commercial and financial views role-restricted) · `Mentioned` = known but not managed yet ("mapped on demand"). It is an organization-side proposal — the representation model stays authoritative for what Studio actually covers.
+- the **Studio** column on each block → **our proposal of what Studio should cover**, validated against [[studio-product-domain-model]] §9 (Organization-to-Studio Mapping): `Managed` = Studio represents and manages first · `Secondary` = covered on demand (often mirrored or linked; commercial and financial views role-restricted) · `Mentioned` = known but not managed yet ("mapped on demand"). It is an organization-side proposal — the Studio Product Domain Model stays authoritative for what Studio actually covers.
+
+**Example value lists are open enumerations.** Where a term lists sample values — Work Item types, Roadmap types, Environment types, SLO tiers, cost units — the list is **defaults/examples, not a closed set**. Studio makes such sets editable per workspace as a **Reference Catalog** ([[studio-product-domain-model]] §7). Sets whose values carry logic (e.g. a Finding's provenance) are *not* open — they are fixed schema.
 
 ## 2. Purpose
 
-This document is the **organization-side canon** of the foundation set: the shared vocabulary of a software-producing organization — terms, relationships with multiplicity, lifecycles and invariants — described independently of any modeling platform. Its companion [[studio-representation-model]] defines how Studio represents and acts on this domain; here this model is authoritative for what the organization *is*. The domain set is initial, extended in later passes.
+This document is the **organization-side canon** of the foundation set: the shared vocabulary of a software-producing organization — terms, relationships with multiplicity, lifecycles and invariants — described independently of any modeling platform. Its companion [[studio-product-domain-model]] defines how Studio represents and acts on this domain; here this model is authoritative for what the organization *is*. The domain set is initial, extended in later passes.
 
 ## 3. Domain Layer
 
@@ -67,7 +71,7 @@ Each domain section has three synchronized views: a **diagram** of the core enti
 
 *Time on relationships.* A relationship that holds only for a period — employment, team membership, an assignment, a subscription — is **not dated on the edge**; it is **reified** as a record entity carrying `valid from` / `valid to` (open `to` = still active; superseded periods are versions of the same record). The plain edge is the **current-state** view over those records. Invariant 7 lists the records that must carry dates.
 
-*Studio coverage (the `Studio` column).* Each L2 block (and §4 term) carries a **Studio** tier — the organization side's proposal of what Studio should cover, validated against [[studio-representation-model]] §9: **Managed** = manage first · **Secondary** = cover on demand · **Mentioned** = known, not managed yet. L3 inherits its block's tier. It is a proposal, not organization-model semantics — the representation model is authoritative.
+*Studio coverage (the `Studio` column).* Each L2 block (and §4 term) carries a **Studio** tier — the organization side's proposal of what Studio should cover, validated against [[studio-product-domain-model]] §9: **Managed** = manage first · **Secondary** = cover on demand · **Mentioned** = known, not managed yet. L3 inherits its block's tier. It is a proposal, not organization-model semantics — the Studio Product Domain Model is authoritative.
 
 *Relationship vocabulary (the `Predicate` column).* Predicates are drawn from a **controlled set** — new relationships reuse an existing predicate rather than coin a synonym. Two conventions keep the set small:
 
@@ -79,7 +83,7 @@ The controlled set, grouped by intent:
 | Group | Predicates |
 | --- | --- |
 | **Structure & membership** | `contains` · `belongs_to` · `groups` · `packages` · `has_capability` · `member_of` · `party_to` |
-| **People & roles** | `employs` · `fills` · `reports_to` · `implies` · `in_role` · `plays_role_in` · `participates_in` · `has_competency` · `requires` |
+| **People & roles** | `employs` · `fills` · `reports_to` · `implies` · `in_role` · `plays_role_in` · `participates_in` · `has_competency` · `has_capacity` · `requires` |
 | **Ownership, assignment & access** | `has_owner` · `assigns` · `assigned_to` · `grants_access_to` · `granted_to` · `attributed_to` · `performed_by` |
 | **Strategy & direction** | `grounds` · `frames` · `drives` · `defines` · `informs` · `prioritizes` · `justified_by` |
 | **Roadmap & change** | `has_type` · `has_scope` · `has_horizon` · `has_planning_view` · `guided_by` · `targets` · `changes` · `realized_by` · `supports` · `addressed_by` |
@@ -122,6 +126,8 @@ erDiagram
     Person }o--o{ Position : "fills"
     Position }o--o{ JobRole : "implies"
     Person }o--o{ Competency : "has_competency"
+    Person }o--o{ Capacity : "has_capacity"
+    Team }o--o{ Capacity : "has_capacity"
     Position }o--o{ Competency : "requires"
     Person ||--o{ Assignment : "receives"
     Assignment }o--o| Project : "assigns"
@@ -146,6 +152,7 @@ erDiagram
 | L3     | ↳ **Person**                     | A real human being known to the Organization.                                                                                                                                                                                                                                                                                                                                                               | **Managed**     |
 | L3     | ↳ **Employment**                 | Dated relationship between a Person and a Legal Entity.                                                                                                                                                                                                                                                                                                                                                     | **Secondary** |
 | L3     | ↳ **Competency**                 | Named capability, skill, expertise area or strength a Person can hold and a Position or Assignment can require — e.g., Kubernetes, payments domain expertise, incident command. Proficiency level and source (declared / assessed / derived) live on the possession record. | **Managed**     |
+| L3     | ↳ **Capacity**                   | Available effort / throughput a Person or Team can commit over a period — the basis for **sprint and capacity planning** (e.g. FTE, story points per sprint, hours per week, % allocation). Dated; the unit is an open enumeration. Distinct from Competency (what they *can* do) — this is *how much*. | **Secondary** |
 | **L2** | **Positions & Reporting**        | Formal role slots and reporting structure.                                                                                                                                                                                                                                                                                                                                                                  | **Managed**     |
 | L3     | ↳ **Position**                   | Official role slot, title or function in the Organization.                                                                                                                                                                                                                                                                                                                                                  | **Managed**     |
 | L3     | ↳ **Reporting Line**             | Dated manager/report relationship from one Position to another.                                                                                                                                                                                                                                                                                                                                             | **Managed**     |
@@ -172,6 +179,7 @@ A person's **profile** (strengths, expertise, work history) is a derived view ov
 | Person                | member_of       | Team                                               | `N:M`    | Through Team Membership; has effective dates.                                                                                                                                                                                        |
 | Person / Team         | participates_in | Project / Workstream                               | `N:M`    | Derived from Assignment records (§4); a person works on many projects, a project has many participants. `(Project, Job Role)` is **not unique** — a project may include several people in the *same* Job Role (e.g. two Product Managers).                                                                     |
 | Person                | has_competency  | Competency                                         | `N:M`    | Proficiency level, source and effective dates on the possession record.                                                                                                                                                              |
+| Person / Team         | has_capacity    | Capacity                                           | `N:M`    | Available effort/throughput over a period; unit is an open enumeration; dated. Feeds sprint/capacity planning against Work Item estimates (§4).                                                                                       |
 | Position / Assignment | requires        | Competency                                         | `N:M`    | |
 | Position | assigned_to | Team | `N:M` | Through Position Allocation; has effective dates. |
 | Position              | reports_to      | Position                                           | `N:1`    | Reporting Line has effective dates.                                                                                                                                                                                                  |
@@ -263,7 +271,7 @@ Engineering Roadmap = Roadmap with type = engineering and scope = Software Estat
 | Roadmap Item         | realized_by      | Project / Workstream                                                                                                                                 | `N:M`    |                                                                      |
 | Business Decision    | changes          | Objective / Strategic Initiative / Roadmap Item / Investment Direction                                                                               | `N:M`    |                                                                      |
 | Budget               | funds            | Strategic Initiative / Project / Team / Organizational Unit                                                                                          | `N:M`    |                                                                      |
-| Spend Record         | attributed_to    | Team / Product / Software System / Vendor / Tooling System / AI Model                                                                                | `N:M`    |                                                                      |
+| Spend Record         | attributed_to    | Team / Product / Software System / Vendor / Tooling System / AI Model / Work Item                                                                    | `N:M`    | Work Item = actual cost of a unit of work (plan lives on the item, §4). |
 | Spend Record         | compared_against | Budget                                                                                                                                               | `N:M`    | Actuals versus the envelope for the same period and scope.           |
 
 ### 3.3 Market
@@ -298,7 +306,7 @@ erDiagram
 | L3     | ↳ **Competitive Comparison** | Quarterly side-by-side comparison of competitors across functionality and company-scale dimensions. | **Managed** |
 | L3     | ↳ **Pricing Benchmark**      | Normalised benchmark of our pricing vs competitors per geography and tier, with trend.              | **Managed** |
 | **L2** | **Signals & Evidence**   | External and customer evidence interpreted into product, market or strategy learning.                                                               | **Managed**       |
-| L3     | ↳ **Market Signal**      | Evidence from market, competitors, sales or customers that may influence product decisions.                                                         | **Managed**       |
+| L3     | ↳ **Market Signal**      | **Market evidence** from competitors, sales or customers — an *input* that **supports** an Insight / Opportunity / Decision; **not itself a Finding** (§3.9) — the finding is the interpreted conclusion drawn from it (the Insight).                                                         | **Managed**       |
 | L3     | ↳ **Customer Feedback**  | Input from customers/users: support tickets, interviews, surveys, usage signals or sales feedback.                                                  | **Managed**       |
 | L3     | ↳ **Research Evidence**  | Observed or collected evidence from research, analysis, interviews, experiments or market monitoring.                                               | **Managed**       |
 | L3     | ↳ **Insight**            | Interpreted learning from evidence that may influence strategy, product or commercial decisions.                                                    | **Managed**       |
@@ -517,7 +525,7 @@ erDiagram
 | L3     | ↳ **Data Asset**                  | Dataset, schema, data product, event taxonomy or managed data resource.                                                                                        | **Managed** |
 | L3     | ↳ **Instrumentation Plan**        | Per-release plan of events, properties and triggers defining the event taxonomy captured to analytics. | **Managed** |
 | **L2** | **Infrastructure & Environments** | Runtime infrastructure and deployment contexts.                                                                                                                | **Managed** |
-| L3     | ↳ **Infrastructure Resource**     | Compute, network, storage, cloud, identity or platform resource used to run systems.                                                                           | **Managed** |
+| L3     | ↳ **Infrastructure Resource**     | Compute, network, storage, cloud, identity or platform resource used to run systems; carries **capacity**, **region / zone** and a **failover / DR** role (a datacenter or cloud account is an instance).                                          | **Managed** |
 | L3     | ↳ **Environment**                 | Runtime/deployment context such as dev, staging or production.                                                                                                 | **Managed** |
 | **L2** | **Tooling & Technology Stack**    | Tooling systems and technology stack used to plan, build, run, support and govern work.                                                                        | **Managed** |
 | L3     | ↳ **Tooling System**              | Software system used by the organization to plan, build, test, run, support or govern work; internally built or vendor-provided.                               | **Managed** |
@@ -532,7 +540,7 @@ erDiagram
 | L3     | ↳ **Software Estate Metric**      | Measures systems, applications, services, repositories, components, data assets, tooling or technology stack.                                                  | **Secondary** |
 
 
-The model intentionally avoids generic `Workspace` as a software-organization term. Real organizations have tool-specific workspaces; those are modeled as `Tool Workspace`. Product-side workspace concepts belong to the product's own domain model (see [[studio-representation-model]]).
+The model intentionally avoids generic `Workspace` as a software-organization term. Real organizations have tool-specific workspaces; those are modeled as `Tool Workspace`. Product-side workspace concepts belong to the product's own domain model (see [[studio-product-domain-model]]).
 
 **Relationships**
 
@@ -606,8 +614,8 @@ erDiagram
 | L3     | ↳ **Release Notes**      | Human-readable summary of what a Release changes: features, fixes, breaking changes, upgrade notes. | **Managed** |
 | L3     | ↳ **SBOM**               | Machine-readable bill of materials: components, libraries and licenses contained in a Build Artifact or Release. | **Managed** |
 | **L2** | **Change Traceability**  | Records and metrics that connect delivered change to scope, evidence and outcomes.            | **Managed** |
-| L3     | ↳ **Change Record**      | Record connecting a delivered change to its scope, evidence, decision and deployment context. | **Managed** |
-| L3     | ↳ **Delivery Metric**    | Measures delivery flow, throughput, quality, lead time, release readiness or effectiveness.   | **Managed** |
+| L3     | ↳ **Change Record**      | Record connecting a delivered change to its scope, evidence, decision and deployment context; carries a **change type** (standard / normal / emergency) and an optional **change window**. | **Managed** |
+| L3     | ↳ **Delivery Metric**    | Measures delivery flow, throughput, quality, lead time, release readiness or effectiveness — includes the **DORA** set (deployment frequency, lead time for change, change-failure rate, time to restore). | **Managed** |
 
 **Relationships**
 
@@ -657,6 +665,9 @@ erDiagram
     Problem }o--o{ Incident : "groups"
     SLO }o--o{ Service : "applies_to"
     ServiceHealth }o--o{ TelemetrySignal : "derived_from"
+    ErrorBudget }o--|| SLO : "derived_from"
+    AvailabilityObjective }o--o{ Requirement : "refines"
+    CapacityUtilization }o--o{ CapacityPlan : "compared_against"
 ```
 
 **Terms**
@@ -665,7 +676,7 @@ erDiagram
 | ------ | --------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------ |
 | **L2** | **Runtime Observation**           | Runtime entities and the telemetry used to observe them.                                                 | **Secondary** |
 | L3     | ↳ **Runtime Instance**            | Running instance of an Application, Service, job, database, queue, model endpoint or other runtime unit. | **Secondary** |
-| L3     | ↳ **Telemetry Signal**            | Observed runtime signal: log, trace, metric, event or health check.                                      | **Secondary** |
+| L3     | ↳ **Telemetry Signal**            | **Raw observed runtime datum** — log, trace, metric, event or health check. An *input, not a conclusion*: it feeds metrics/alerts and is interpreted (via Incident / Assessment / Postmortem) into a **Finding** (§3.9). *(Term of art in observability; systems emit signals, people produce findings.)* | **Secondary** |
 | L3     | ↳ **Operational Metric**          | Measures runtime, reliability, performance, availability or operational behavior.                        | **Secondary** |
 | L3     | ↳ **Alert**                       | Operational signal emitted by monitoring or observation.                                                 | **Secondary** |
 | **L2** | **Incident & Problem Management** | Operational disruptions, impact analysis and follow-up.                                                  | **Managed**   |
@@ -675,7 +686,12 @@ erDiagram
 | L3     | ↳ **Problem**                     | Underlying or recurring cause behind incidents, defects or operational instability.                      | **Managed**   |
 | **L2** | **Reliability Management**        | Reliability objectives and service health state.                                                         | **Secondary** |
 | L3     | ↳ **SLO**                         | Internal measurable reliability or service-level objective.                                              | **Secondary** |
+| L3     | ↳ **Error Budget**                | Allowed unreliability derived from an SLO (`1 − target`); its consumption (**burn**) is tracked and gates change. | **Secondary** |
 | L3     | ↳ **Service Health**              | Current or historical view of whether a service is operating within expected thresholds.                 | **Secondary** |
+| **L2** | **Capacity & Continuity Planning** | *Planning half of operations (Fabric §5.4 conformance; tier Secondary/Mentioned, not MVP).* Forecasting, continuity targets and plan-vs-actual. | **Mentioned** |
+| L3     | ↳ **Capacity Plan**               | Forecast of infrastructure/resource needs against expected demand; flags projected overruns.             | **Mentioned** |
+| L3     | ↳ **Availability Objective**      | Continuity / disaster-recovery commitment for a service or environment — **RTO / RPO** and external SLA flavor; refines a non-functional Requirement. *(Steady-state availability/latency stays on **SLO** — this term covers continuity, not day-to-day reliability.)* | **Mentioned** |
+| L3     | ↳ **Capacity Utilization**        | Planned-vs-actual resource usage; **drift** between plan and real consumption is flagged.                | **Mentioned** |
 | **L2** | **Operational Knowledge**         | Procedures used to run, diagnose and recover systems.                                                    | **Managed**   |
 | L3     | ↳ **Runbook**                     | Operational procedure for running, diagnosing or recovering a system.                                    | **Managed**   |
 
@@ -694,6 +710,11 @@ erDiagram
 | Problem | produces | Remediation / Work Item | `N:M` |  |
 | Operational Metric | measures | SLO | `N:M` |  |
 | SLO | applies_to | Service / Product / Runtime Instance | `N:M` | |
+| Error Budget | derived_from | SLO | `N:1` | Burn is tracked against it; feeds change gating. |
+| Availability Objective | applies_to | Service / Environment / Runtime Instance | `N:M` | Continuity/DR commitment (RTO/RPO + external SLA flavor); steady-state availability/latency stays on SLO. |
+| Availability Objective | refines | Requirement | `N:M` | The non-functional requirement it makes measurable (NFR traceability). |
+| Capacity Plan | references | Infrastructure Resource / Environment / Service | `N:M` | Forecast of demand vs supply; flags projected overruns. |
+| Capacity Utilization | compared_against | Capacity Plan | `N:M` | Planned-vs-actual; drift is flagged (the raw usage number is an Operational/Estate Metric). |
 | Service Health | derived_from | Telemetry Signal / Operational Metric / SLO / Alert / Incident | `N:M` | |
 | Runbook | applies_to | Incident / Problem / Runtime Instance | `N:M` |  |
 | Postmortem | analyzes | Incident | `N:1` | |
@@ -833,9 +854,14 @@ erDiagram
     Dependency }o--o{ WorkItem : "blocks"
     WorkItem }o--o{ Requirement : "implements"
     Project }o--o{ Repository : "uses"
+    SpendRecord }o--o{ WorkItem : "attributed_to"
     Assignment {
         date from
         date to
+    }
+    WorkItem {
+        measure estimate
+        money cost
     }
 ```
 
@@ -849,8 +875,8 @@ erDiagram
 | **Activity**       | Bounded action or step within a process, project or workstream.                                                                                           | **Managed** |
 | **Backlog**        | Ordered or triaged collection of work that may be considered, planned or executed.                                                                        | **Managed** |
 | **Sprint**         | Time-boxed execution iteration into which work items are planned (Scrum; other cadences map to Process).                                                  | **Managed** |
-| **Work Item**      | Tracked unit of delivery or follow-up work.                                                                                                               | **Managed** |
-| **Work Item Type** | Classification of a Work Item — epic, user story, task, bug, spike, chore, incident follow-up, remediation task.                                          | **Managed** |
+| **Work Item**      | Tracked unit of delivery or follow-up work. Carries an optional **estimate** (effort) and **cost** — each in a unit drawn from an open enumeration (man-days, story points, tokens, $ / €); actual spend attaches via Spend Record (§3.2). | **Managed** |
+| **Work Item Type** | Classification of a Work Item — epic, user story, task, bug, spike, chore, incident follow-up, remediation task *(open enumeration; defaults shown)*.                                          | **Managed** |
 | **Assignment**     | Allocation of work to a person, team, role or function; may carry the Job Role in which the assignee acts for this work; has effective dates when needed. | **Managed** |
 | **Milestone**      | Significant target date or achievement in a Project, Workstream or Roadmap.                                                                               | **Managed** |
 | **Dependency**     | Relationship where one object, work item, team or external constraint affects another.                                                                    | **Managed** |
@@ -867,6 +893,7 @@ erDiagram
 | Project | has_owner | Person / Team | `N:M` | Through Responsibility Assignment. |
 | Backlog | contains | Work Item | `0..N` | |
 | Work Item | has_type | Work Item Type | `N:1` | |
+| Spend Record | attributed_to | Work Item | `N:M` | Actual cost of the work; the estimate/cost attributes on the item are the plan, this is the actual (§3.2). |
 | Sprint | plans | Work Item | `N:M` | A work item may carry over. |
 | Work Item | implements | Requirement / Acceptance Criteria | `N:M` | |
 | Process | contains | Activity / Handoff | `1:N` | |
@@ -898,7 +925,7 @@ Common development tracker labels are modeled as `Work Item Type` values — con
 
 ## 5. Function Overlay
 
-Functions describe who participates. Functions never hold accountable ownership (invariant 1) — they participate in work routing (assignment, handoff). On the Studio side, functions do not become containers or objects — they appear through actor roles, assignments and views ([[studio-representation-model]] §9). The **Studio** column flags which functions Studio is built to serve (Vision §7.2): **Product Management**, **R&D / Engineering**, **Design / UX**, **DevOps / SRE**, **Customer Success** and **QA** are **Managed** (represent first); Product Marketing, GTM / Sales, Security / Compliance, People Ops and Internal IT are **Secondary** (cover on demand); Finance, Legal and Procurement stay **Mentioned**. The tier signals how far Studio models the function's participation, not object ownership (invariant 1 still holds).
+Functions describe who participates. Functions never hold accountable ownership (invariant 1) — they participate in work routing (assignment, handoff). On the Studio side, functions do not become containers or objects — they appear through actor roles, assignments and views ([[studio-product-domain-model]] §9). The **Studio** column flags which functions Studio is built to serve (Vision §4.4): **Product Management**, **R&D / Engineering**, **Design / UX**, **DevOps / SRE**, **Customer Success** and **QA** are **Managed** (represent first); Product Marketing, GTM / Sales, Security / Compliance, People Ops and Internal IT are **Secondary** (cover on demand); Finance, Legal and Procurement stay **Mentioned**. The tier signals how far Studio models the function's participation, not object ownership (invariant 1 still holds).
 
 | Function | Participates mainly in | Notes | Studio |
 | --- | --- | --- | --- |
@@ -955,8 +982,7 @@ State lists are indicative vocabularies, not mandated workflows; organizations a
 11. An active Product, Software System, Service, AI Agent or Budget has an accountable owner — a Person or Team, through Responsibility Assignment.
 12. An Assignment binds one assignee (Person / Team / AI Agent) to one work object (Work Item / Activity / Project / Workstream) in at most one Job Role. Neither pairing is unique: `(Project, Job Role)` may recur across assignees — several people may hold the same role on one project (e.g. two Product Managers) — and `(Person, Project)` may recur with different roles — one person may act in a different Job Role on each project.
 
-## Appendix A. 
+## Appendix A. Supersession note
 
-Everything else is content-identical to v0.8.09. Glossary rows for the new terms (now including Competency — renamed from Skill — Product License, Mission) and notes (Vision scope, `in_role`, `participates_in`) live in the unified [[studio-glossary]] (which superseded and replaced the former standalone software-organization glossary).
+This document is the canonical software-organization domain model. It **superseded `v0.8.09`** in a full rewrite (2026-07-13); the predecessor file and the earlier Level-1/Level-2 drafts were removed. Since then it has grown by decision (register): Competency rename (was Skill), SBOM/Release Notes (§3.7), Work Item `estimate`/`cost` + `Spend Record → Work Item` (D-068), the planning half of Operations — Error Budget, Capacity & Continuity Planning, DORA, change-type/window, region/DR (D-069), Person/Team **Capacity** + `has_capacity` (D-075), and open-enumeration marks (D-076). Status/date in the frontmatter track the latest such change; per-decision history lives in [[studio-decision-register]]. 
 
-**v0.9.2 — relationship-vocabulary consolidation.** The predicate set was normalized from 116 distinct verbs to a controlled set of 76 (see the *Relationship vocabulary* block in §3). No relationships were removed except three fully-redundant inverse rows (`Opportunity supported_by …`, `Pull Request has_review …`, and the duplicate `Risk mitigated_by …`); every other change is a rename or a subject/object flip to active voice. Applied by rule: (1) passive `…_by` forms folded into their active twin; (2) synonym clusters merged (`creates`/`generates`/`emits`/`creates_or_updates`/`may_create` → `produces`; `relates_to`/`links`/`connects` → `references`; `impacts`/`updates` → `affects`; `consumes`/`used_by`/`consumed_by` → `uses`; and others); (3) compound decision verbs (`approves_rejects_or_defers`, `accepts_rejects_or_prioritizes`, `accepts`) → `decides_on`, outcome carried as a Decision attribute. Parsed clean (unmatched=0).
