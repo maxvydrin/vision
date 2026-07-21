@@ -1,8 +1,8 @@
 ---
 type: foundation
 artifact: software-organization-domain-model
-status: draft-v0.9.11
-date: 2026-07-16
+status: draft-v0.9.12
+date: 2026-07-21
 scope: software-organization
 language: en
 supersedes: "v0.8.09 — full rewrite 2026-07-13 (predecessor file removed; see Appendix A)"
@@ -18,11 +18,37 @@ related:
 
 # Software Organization Domain Model
 
+<!-- toc -->
+
+- [1. How to read this model](#1-how-to-read-this-model)
+- [2. Purpose](#2-purpose)
+- [3. Domain Layer](#3-domain-layer)
+  - [3.1 Organizational Structure & People](#31-organizational-structure--people)
+  - [3.2 Strategy](#32-strategy)
+  - [3.3 Market](#33-market)
+  - [3.4 Product](#34-product)
+  - [3.5 Commercial](#35-commercial)
+  - [3.6 Software Estate](#36-software-estate)
+  - [3.7 Delivery](#37-delivery)
+  - [3.8 Operations](#38-operations)
+  - [3.9 Governance](#39-governance)
+  - [3.10 External Dependencies](#310-external-dependencies)
+- [4. Work Management Layer](#4-work-management-layer)
+- [5. Function Overlay](#5-function-overlay)
+- [6. Lifecycles And Invariants](#6-lifecycles-and-invariants)
+  - [6.1 Lifecycles](#61-lifecycles)
+  - [6.2 Invariants](#62-invariants)
+- [Appendix A. Supersession note](#appendix-a-supersession-note)
+
+<!-- tocstop -->
+
 ## 1. How to read this model
 
 This document defines the domain model of a software-producing organization: the terms it uses, how those terms relate to each other (and in what numbers), how they change over time, and the rules that always hold.
 
 This is the **reference model used to validate the Studio model** — the *Studio Product Domain Model* (`studio-product-domain-model`) is checked against the reality described here. This document is not renamed; it stays the organization reference.
+
+**On the word "Artifact".** VISION uses *artifact* as an umbrella for any work product the lifecycle produces. This model keeps that umbrella sense informal and instead names the **specific** kinds — **Design Artifact** (§3.4), **Build Artifact** (§3.7) — so there is no bare "Artifact" entity to collide with the kernel metatype (renamed to *Immutable Blob*; see product-model D-060).
 
 **The model has three dimensions.** They describe different kinds of things, and the whole point of the model is to keep them separate rather than flatten them into one hierarchy:
 

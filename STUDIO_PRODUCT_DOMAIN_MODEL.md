@@ -1,11 +1,12 @@
 ---
 type: foundation
 artifact: studio-product-domain-model
-status: draft-v0.9.24
-date: 2026-07-16
+status: draft-v0.9.25
+date: 2026-07-21
 scope: studio-product
 language: en
 conforms-to: "studio-kernel-model"
+kernel-source: https://github.com/constructorfabric/fabric-poc/blob/main/docs/domain-model.md
 source:
   - "software-organization-domain-model"
   - STUDIO_VISION.md
@@ -29,6 +30,45 @@ related:
 # Studio Product Domain Model
 
 *How Studio represents a software organization — Studio's own world, how the organization's domain model flows into it, and how work moves forward on top. Includes the Organization-to-Studio Mapping.*
+
+<!-- toc -->
+
+- [0. The Whole Model On One Page](#0-the-whole-model-on-one-page)
+- [1. Frame](#1-frame)
+- [2. Names And Aliases](#2-names-and-aliases)
+- [3. Studio's World](#3-studios-world)
+  - [3.1 Containers and people](#31-containers-and-people)
+  - [3.2 Objects and relations](#32-objects-and-relations)
+  - [3.3 Working surfaces](#33-working-surfaces)
+  - [3.4 What properties an object carries — and who controls them](#34-what-properties-an-object-carries--and-who-controls-them)
+- [4. How the Organization Enters Studio](#4-how-the-organization-enters-studio)
+- [5. Who Sees What](#5-who-sees-what)
+- [6. The Acting Layer](#6-the-acting-layer)
+  - [6.1 Actions, validation, write-back](#61-actions-validation-write-back)
+  - [6.2 AI collaboration](#62-ai-collaboration)
+  - [6.3 Usage and cost](#63-usage-and-cost)
+  - [6.4 Mechanical guarantees relied on (kernel contract, by reference)](#64-mechanical-guarantees-relied-on-kernel-contract-by-reference)
+  - [6.5 Collaboration](#65-collaboration)
+  - [6.6 The Assistant](#66-the-assistant)
+- [7. Lifecycle, Packaging And Vocabulary](#7-lifecycle-packaging-and-vocabulary)
+- [8. Relationship Catalog And Invariants](#8-relationship-catalog-and-invariants)
+  - [8.1 Relationship catalog](#81-relationship-catalog)
+  - [8.2 Invariants](#82-invariants)
+- [9. Organization-to-Studio Mapping](#9-organization-to-studio-mapping)
+- [10. Worked Example And Scenarios](#10-worked-example-and-scenarios)
+  - [10.1 An administrator connects the organization (cold start)](#101-an-administrator-connects-the-organization-cold-start)
+  - [10.2 A competitor signal becomes an approved spec](#102-a-competitor-signal-becomes-an-approved-spec)
+  - [10.3 A developer ships it — and the loop closes through the source](#103-a-developer-ships-it--and-the-loop-closes-through-the-source)
+  - [10.4 A portfolio lead looks across lines (the per-workspace boundary, honestly)](#104-a-portfolio-lead-looks-across-lines-the-per-workspace-boundary-honestly)
+- [Appendix A. Key Design Decisions](#appendix-a-key-design-decisions)
+  - [Decided — modeling rationale not captured by an invariant or entity](#decided--modeling-rationale-not-captured-by-an-invariant-or-entity)
+- [Appendix B. Lifecycles](#appendix-b-lifecycles)
+- [Appendix C. Product Commitments (→ PRD)](#appendix-c-product-commitments--prd)
+- [Appendix D. Working across workspaces — requirements (R1–R10)](#appendix-d-working-across-workspaces--requirements-r1r10)
+- [Appendix E. Property classification map (illustrative)](#appendix-e-property-classification-map-illustrative)
+- [Out Of Scope Of This Document](#out-of-scope-of-this-document)
+
+<!-- tocstop -->
 
 ## 0. The Whole Model On One Page
 
@@ -120,7 +160,7 @@ flowchart LR
 
 **This document is** the domain model of Studio (the product): the entities that exist *only because Studio exists*, their relationships and invariants, and the mapping from each organization entity to its Studio object. It **takes the organization's domain model (software-organization-domain-model) as its reference** — the entities Studio represents are drawn from there, and no organization entity is redefined here. **It is not** that organization model itself, an information architecture or screen design (downstream, with the UX team), or a storage / sync architecture.
 
-**It sits above the Studio Kernel Model** (studio-kernel-model) as one of two co-normative layers. The kernel is normative for mechanics — identity, versioning, execution, authorization, audit — which this document adopts **by reference and never restates** (a rule only code can verify lives in the kernel; here live the principle and the scenario). This document is normative for the product domain; where the two appear to conflict, it is a defect, resolved in the decision register.
+**It sits above the Studio Kernel Model** ([canonical source — constructorfabric/fabric-poc `docs/domain-model.md`](https://github.com/constructorfabric/fabric-poc/blob/main/docs/domain-model.md)) as one of two co-normative layers. The kernel is normative for mechanics — identity, versioning, execution, authorization, audit — which this document adopts **by reference and never restates** (a rule only code can verify lives in the kernel; here live the principle and the scenario). This document is normative for the product domain; where the two appear to conflict, it is a defect, resolved in the decision register.
 
 ## 2. Names And Aliases
 
@@ -235,6 +275,8 @@ Workflow             (repeatable pipeline — definition; published to the Workf
 
 *One trace: a member runs the "Gap Analysis" workflow from the library → a run starts → an analysis activity executes an action → the action run consumes a context package and its AI run bills tokens → **findings** land on the graph and surface in insight views; anything mirror-touching waits as a prepared action run.*
 
+**Locale is part of the viewer's rendering context.** Each member has a locale — language, date/number/currency format, week-start, text direction (RTL) — and every View renders through it, so members collaborating on the same objects each read them in their own locale. Locale is **member configuration, not a domain entity** (like client access and notification preferences).
+
 ### 3.4 What properties an object carries — and who controls them
 
 One question runs across every Studio object — **write authority**: *who may set a field?*
@@ -285,7 +327,7 @@ Admin configures Connectors (Jira, GitLab, Confluence, HRIS)
 
 ## 5. Who Sees What
 
-Access model: **RBAC** (role-based access control). Permissions attach to roles; roles are granted to **members and teams**; nothing is ever attached to an individual object. The **base access model is RBAC**; attribute-level restriction, explicit deny and legal walls (**ABAC**) are the enterprise variant, **an enterprise capability** — the VISION §6.4 "rich RBAC/ABAC" line is a roadmap position, not a base-model promise.
+Access model: **RBAC** (role-based access control). Permissions attach to roles; roles are granted to **members and teams**; nothing is ever attached to an individual object. Attribute-level restriction, explicit deny and legal walls (**ABAC**) are a **deferred enterprise variant** (D-041), not part of the phase-1 base model.
 
 | Term                               | Meaning                                                                                                                                                                                                                                                                                                                                                                                                                    | Primary relationships                                                           | Facing        |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------- |
@@ -374,9 +416,9 @@ Cost is a **first-class, computed layer**, not an afterthought: every model call
 
 *One trace (the cost scenario): a workflow runs → each step's Action Run bills an **AI Run** recording its token breakdown → a step that re-queried 5× and one that used an oversized model show up as **retry-overhead** and high **completion** tokens → **Cost Metric** rolls the spend up per step, per phase and for the whole scenario → a **Cost Retrospective** compares plan vs actual, names those two as the waste, and raises a **Finding → Recommendation**: "route step 5 to a cheaper model (§6.2), cache step 3." A **Cost Budget** would have alerted or blocked had the run breached its cap. Every number is computed from runs — so "count tokens at every step and say whether it could have been cheaper" is answerable end-to-end, and provable.*
 
-### 6.4 Adopted from the kernel contract (by reference)
+### 6.4 Mechanical guarantees relied on (kernel contract, by reference)
 
-The kernel contract (studio-kernel-model) is normative for execution mechanics. This model adopts the following **by reference — as principles, never re-specified machinery**:
+This model is normative for the **domain**; the kernel is normative for the **mechanics** — neither layer is subordinate to the other. What follows is the machinery the domain logic leans on, owned by the kernel contract ([canonical source — constructorfabric/fabric-poc `docs/domain-model.md`](https://github.com/constructorfabric/fabric-poc/blob/main/docs/domain-model.md)) and adopted here **by reference — as principles, never re-specified machinery**:
 
 - **Exact version binding.** Every governed run pins its exact inputs — object versions, policy versions, approval evidence, connector version, an idempotency key — and write-backs return **effect receipts**. Without this, the golden thread and the cost metrics are unprovable.
 - **Retry is a new run**, with lineage to its predecessor; a run is never mutated and re-run.
@@ -450,6 +492,8 @@ Most adaptation is the bottom two rungs — no forking, governance intact.
 
 **How to read this table** *(reference material — skim on first read)*: cardinality `A:B` says how many subjects relate to how many objects — `1:1` one-to-one, `1:N` one subject to many objects, `N:1` many subjects to one object, `N:M` many-to-many; `0..1` = optional (zero or one), `0..N` = zero or more; `A × B` = a pair. "Exactly 2, directed" = the relation always joins two objects, from → to. "Exactly one" = the subject belongs to one of the listed alternatives, never several. Backticked lowercase words in running text (`advances`, `measures`) are relation-type names from this catalog.
 
+**Predicate vocabulary.** Semantic/mirrored relations reuse the org model's controlled predicate set (canonical `snake_case`). Structural relations native to Studio — `owns`, `includes`, `represents`, `represented as`, `typed by`, `activates`, `gates`, `installs`, `distributes` … — have no org equivalent and are Studio-only **by design**, not synonyms of controlled predicates.
+
 | Subject                                    | Predicate         | Object                                                                                        | Cardinality              | Notes                                                                                                                              |
 | ------------------------------------------ | ----------------- | --------------------------------------------------------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
 | Tenant                              | represents        | Organization                                                                                  | `1:1`                    | Cardinality unchanged. Service-provider topology = an **admin hierarchy of tenants** (next row), not one tenant over many orgs.                                                                               |
@@ -472,7 +516,7 @@ Most adaptation is the bottom two rungs — no forking, governance intact.
 | Object Type                                | represents        | Organization-model term                                                                       | `N:1`                    | Several types may specialize one term.                                                                                             |
 | Object Type                                | specializes       | Object Type                                                                                   | `N:1` optional           | Metric family, Decision subtypes.                                                                                                  |
 | Managed Object                             | assembled from    | Source Record                                                                                 | `0..N`                   | 0 for authored objects; via Identity Mapping.                                                                                      |
-| Source Record                              | produced by       | Connector                                                                                     | `N:1`                    |                                                                                                                                    |
+| Connector | produces | Source Record | `1:N` |  |
 | Connector                                  | connects to       | Source System                                                                                 | `N:1`                    | A source system may have several connectors.                                                                                       |
 | Sync State                                 | tracks            | Source Link                                                                                   | `1:1`                    | Source Link = managed object × source record.                                                                                      |
 | Sync Run                                   | updates           | Managed Object / imported Relation                                                            | `N:M`                    | May raise Conflicts.                                                                                                               |
@@ -487,7 +531,7 @@ Most adaptation is the bottom two rungs — no forking, governance intact.
 | Automation Rule                            | triggers          | Workflow / Action                                                                             | `N:M`                    | On events, syncs, schedules.                                                                                                       |
 | Assistant *(an AI Agent Actor)*            | composes          | ordered sequence of Workflow Run / Action Run / Kit Activation / control-plane decision       | `1:N`                    | **Out-of-kernel orchestration over N independently-authorized operations** (parallel to the kit-push C1 answer) — **no new entity**; each op keeps its own authorization + audit; control-plane steps are authored/approved decisions, not Flow steps; shown as plan-preview; write-backs gated by approval; conversation-correlated via the correlation pattern (§3.1.1).                          |
 | Assistant                                  | selects from      | Workflow Library / activated Object Types                                                     | `N:M`                    | Picks tools from the governed catalogue, never arbitrary (§7).                                                                     |
-| Finding (computed)                         | derived from      | Knowledge Graph                                                                               | `N:1`                    | Raised by workflows, validators and checkpoints; auto-resolves when the condition clears (invariant 14). Mirrored findings sync from sources instead. |
+| Finding (computed) | derived_from | Knowledge Graph | `N:1` | Raised by workflows, validators and checkpoints; auto-resolves when the condition clears (invariant 14). Mirrored findings sync from sources instead. |
 | Finding                                    | may produce       | Action Run (`prepared`) / Opportunity                                                         | `1:N`                    | Finding first, recommendation second — the trust ramp in the model.                                                                |
 | Actor                                      | performs          | Action Run                                                                                    | `1:N`                    | Attribution is mandatory.                                                                                                          |
 | Actor (AI agent)                           | plays             | Agent Role                                                                                    | `N:M`                    | Per workflow / stage. The human counterpart is the org **Job Role**, a mirrored fact (Person fills Position, Position implies Job Role); access Roles are a separate question (§5). |
@@ -498,19 +542,19 @@ Most adaptation is the bottom two rungs — no forking, governance intact.
 | Action Run                                 | produces          | Candidate Object                                                                              | `0..N`                   |                                                                                                                                    |
 | Action Run (`prepared`)                    | targets           | Managed Object                                                                                | `N:M`                    | The recommendation state ("Prepared Action"); decided by exactly one Approval.                                                     |
 | Action Run (write-back)                    | updates           | Source System                                                                                 | `N:1`                    | Requires capability + permission + validation + approval + audit — all five (invariant 10).                                        |
-| Validator                                  | checks            | Candidate Object / Action Run / Managed Object                                                | `N:M`                    | Produces validation status + evidence.                                                                                             |
+| Validator | evaluates | Candidate Object / Action Run / Managed Object | `N:M` | Produces validation status + evidence. |
 | Quality Gate                               | gates             | Action Run / Activity                                                                         | `N:M`                    | Including write-back runs; requires evidence.                                                                                      |
 | Evidence                                   | supports          | Validation Status / Approval / Quality Gate                                                   | `N:M`                    |                                                                                                                                    |
 | Actor                                      | authors           | Comment                                                                                        | `1:N`                    | Attribution mandatory (invariant 12).                                                                                              |
 | Comment                                    | targets           | Managed Object / content version / Candidate Object / Action Run                               | `N:1`                    | Studio-native; may write-back to source where mirrored (§6.5).                                                                     |
 | Comment                                    | belongs to        | Discussion Thread                                                                              | `N:1`                    |                                                                                                                                    |
 | Notification                               | targets           | Member / Team                                                                                  | `N:M`                    | Computed / dispatched, never authored.                                                                                            |
-| Approval                                   | decides           | Action Run (`prepared` / write-back) / Candidate Object                                       | `1:1` per decision event | Audit-logged. A deferred run returns to `prepared` and may be decided again — a **new** approval record each time. Bulk = an immutable manifest of exact versions with per-subject outcomes, each attributed to its actor.                 |
+| Approval | decides_on | Action Run (`prepared` / write-back) / Candidate Object | `1:1` per decision event | Audit-logged. A deferred run returns to `prepared` and may be decided again — a **new** approval record each time. Bulk = an immutable manifest of exact versions with per-subject outcomes, each attributed to its actor. |
 | AI Run                                     | belongs to        | Action Run / Workflow Run                                                                     | `N:1`                    | Carries model + cost.                                                                                                              |
 | Cost Budget                                | caps              | AI Run (at a scope)                                                                           | `1:N`                    | Tenant / workspace / project / workflow / agent / model.                                                                                      |
 | Cost Retrospective                         | analyzes          | Workflow Run / Lifecycle Phase / AI Run                                                        | `N:M`                    | Plan vs actual tokens/cost; where spend went; cheaper-path.                                                                         |
-| Cost Retrospective                         | produces          | Finding (cost-optimization) / Recommendation                                                  | `1:N`                    | Surfaces on the trust ramp (§6.1), not a silent metric.                                                                             |
-| Delivery Metric                            | computed from     | Transition / Relation                                                                         | `N:M`                    | Read from history, never entered (invariant 14).                                                                                   |
+| Cost Retrospective                         | produces          | Finding (cost-optimization) → prepared Action Run *(a Recommendation)*                         | `1:N`                    | Surfaces on the trust ramp (§6.1), not a silent metric. "Recommendation" = label for the prepared Action Run, not a separate entity (glossary). |
+| Delivery Metric | derived_from | Transition / Relation | `N:M` | Read from history, never entered (invariant 14). |
 | Metric *(domain specializations only)*     | measures          | Managed Object                                                                                | `N:M`                    | The §9 metrics convention; a generic `Metric` is never instantiated — always a domain specialization.                              |
 | Kit                                 | packages          | Object Type / Relation Type / Terminology Override / **Reference Catalog** / Workflow / Action / Validator / Template / Gears / **UI Extension** *(sandboxed, §6.4)* | `1:N`                    | Terminology overrides ship labels; Reference Catalogs ship default value sets; UI extension's safety constraint is the kernel mechanic in §6.4.                                                                                                                                   |
 | Kit Catalog                                | contains          | Kit                                                                                    | `1:N`                    | Shipped + published by members; one catalog per tenant.                                                                            |
@@ -568,7 +612,7 @@ First-pass mapping of the most important organization entities — every root do
 | Product (Product) | Product | product catalog, wiki | mirrored or authored | product catalog |
 | Product Capability / Feature (Product) | Product Capability, Feature | wiki, PRDs, tracker components | mostly authored | capability map |
 | Requirement (Product) | Requirement — content-backed | PRD/spec docs, tracker | authored + mirrored | requirements / spec view |
-| Spec & design artifacts (Product) | PRD, DESIGN Document, **Design (content-backed)** *(org term: Design Artifact — the Studio type drops "Artifact", reserved for the kernel's frozen metatype)*, Decomposition, Feature Spec, Impact/Coverage Report — content-backed managed objects (object = document, versioned) | wiki, Figma, PRD/spec docs, repo | authored + mirrored | spec / design view |
+| Spec & design artifacts (Product) | PRD, DESIGN Document, **Design (content-backed)** *(org term: Design Artifact — the Studio type drops "Artifact", reserved for the kernel's frozen metatype; reverts to "Design Artifact" once the kernel frees the word — D-060)*, Decomposition, Feature Spec, Impact/Coverage Report — content-backed managed objects (object = document, versioned) | wiki, Figma, PRD/spec docs, repo | authored + mirrored | spec / design view |
 | UI/UX Interactive PoC App (Product) | *linked* to a Repository / deployed preview — running code, not a content-backed doc | repo, preview host | linked | prototype / PoC gallery |
 | Customer Account (Commercial) | Customer Account | CRM | mirrored (often *linked*) *(on-demand)* | account overview 🔒 |
 | Customer Agreement / Subscription (Commercial) | Customer Agreement, Subscription | CRM, billing | linked *(on-demand)* | commercial views 🔒 |
@@ -686,14 +730,13 @@ Output: a real cross-line view today (aggregates + per-workspace drill),
 
 ### Decided — modeling rationale not captured by an invariant or entity
 
-*Status arbiter: studio-decision-register (one row per decision). This appendix keeps **only rationale encoded nowhere else** — reasoning not already stated by an invariant (§8.2) or an entity table. Decisions fully realized by an invariant/entity (D-018–D-023, D-025, D-027–D-032, D-061, D-063–D-065, D-067–D-076) live only in the register; **D-017 is superseded by D-058 and dropped.** *(D-016 and D-024 carry their topology rule in the register but keep their **rationale** below — the "why the one sanctioned cross-tenant move" reasoning.)*
+*Status arbiter: studio-decision-register (one row per decision). This appendix keeps **only rationale encoded nowhere else** — reasoning not already stated by an invariant (§8.2) or an entity table. Decisions fully realized by an invariant/entity (D-018–D-023, D-025, D-027–D-032, D-061, D-063–D-065, D-067–D-076) live only in the register; **D-017 is superseded by D-058 and dropped; D-066 merged into D-020 + D-041 and dropped.** *(D-016 and D-024 carry their topology rule in the register but keep their **rationale** below — the "why the one sanctioned cross-tenant move" reasoning.)*
 
 - **D-058 — identity is workspace-local; three layers.** The three layers exist for a reason the invariants (2/5/15) don't state: **control-plane citizens** carry authorization (never the graph), **graph objects** are workspace-local domain data, **Citizen Stand-ins** are kit-created, non-authoritative stand-ins for citizens when a workspace needs one *on* the graph. Same real subject in two workspaces = two independent objects (K-IDENT-01..07). Supersedes D-017.
 - **D-059 — cross-workspace = correlation layer (phase 2).** Cross-line summaries are built **above** workspaces via correlation IDs + correspondence records — non-authoritative, never a recreated tenant registry (K-IDENT-07). Conformant home: a dedicated aggregation workspace (its "unified person" is a *new correlated local object*, not the same identity) and/or app-level composition over opaque keys — side-by-side, never one object across lines. The conformant *fallback* if the proposed kernel changes (App. D) is refused; the product bets on the proposed kernel changes (App. D) for object-level cross-line.
-- **D-060 — kernel `Artifact` → Immutable Blob (status: proposed — pending the kernel author).** The kernel scheme is adopted as-is; its axis is **identified-entity-with-versions (`Object`) vs frozen content-addressed payload** — *not* editable-vs-immutable. Proposed change: rename the metatype `Artifact` → **Immutable Blob** to free "artifact" as team slang; editable content = an Object with a content facet, no separate type. Open until the kernel author rules.
+- **D-060 — kernel `Artifact` → Immutable Blob (confirmed with the kernel author 2026-07-21; rename pending in fabric-poc).** The kernel scheme is adopted as-is; its axis is **identified-entity-with-versions (`Object`) vs frozen content-addressed payload** — *not* editable-vs-immutable. The kernel renames the metatype `Artifact` → **Immutable Blob**, freeing "artifact" as a domain word; editable content = an Object with a content facet, no separate type. **Trigger:** once the rename lands in the kernel, this model reverts its type **Design → Design Artifact** (§9), re-aligning product ↔ org ↔ VISION — the only reason it was dropped (the kernel reservation) is then gone. Until then the type stays **Design**.
 - **D-062 — what Studio *is*: kernel + guaranteed kit-set.** Studio = an inert **kernel** + non-removable, auto-activated mechanism kits **`cf.governance`** and **`cf.ai`** + **≥1 swappable domain-skeleton kit** (default SDLC Kit). Trust ramp and "AI cost per accepted change" are product guarantees carried by the mechanism kit-set, never optional kit content. (OS analogy: "no kit" = "no userland", not "no product".)
 - **D-024 ⇄ D-016 — the one sanctioned cross-tenant move.** Tenant:Org stays 1:1; a parent tenant may **administer** N child tenants (control-plane). No marketplace / monetization / peer cross-tenant sharing — **except** a parent distributing its kit *down* the hierarchy (audited, copy-only). The single exception, because a provider administering its own clients ≠ a marketplace.
-- **D-066 — RBAC now, ABAC deferred (enterprise, D-041).** Phase-1 access = RBAC + type-level Data Policy visibility (D-061); attribute-level restriction / explicit deny / legal walls (ABAC) = enterprise variant, enterprise (D-041). *(VISION §6.4's "rich RBAC/ABAC" is a roadmap position, not a base-model promise — a note for the vision owner.)*
 
 **Boundary (out of scope, D-026):** client access — CLI / IDE / MCP / API tokens — is per-member **configuration, not domain entities** (like commercial packaging). Noted so it isn't mistaken for a missing entity.*
 
@@ -789,7 +832,7 @@ One row per entity: the states an instance passes through, from creation to reti
 | *illustrative per-type* | Work Item planned estimate/cost | editable (Studio augmentation, rule 1) |
 | | Spend Record actual / Capacity Utilization | system (computed) |
 
-*Which layer's contract **defines/seals** a field is not classified here (it is an architecture concern): `read-only` mechanism fields — id, version, audit, run `executionState`, `parentTenantId`, pinned type version — are owned by the kernel contract (studio-kernel-model); domain fields are defined by their **kit** (GTS type). The glossary ▸ Cross-layer alias table maps each concept to its kernel term.*
+*Which layer's contract **defines/seals** a field is not classified here (it is an architecture concern): `read-only` mechanism fields — id, version, audit, run `executionState`, `parentTenantId`, pinned type version — are owned by the kernel contract ([Studio Kernel Model](https://github.com/constructorfabric/fabric-poc/blob/main/docs/domain-model.md)); domain fields are defined by their **kit** (GTS type). The glossary ▸ Cross-layer alias table maps each concept to its kernel term.*
 
 ## Out Of Scope Of This Document
 
