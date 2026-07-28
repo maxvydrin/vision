@@ -1,11 +1,3 @@
----
-title: Studio — Collaboration through comments (requirements)
-status: draft-v0.3
-date: 2026-07-21
-source: call transcript "Studio: collaboration / Git / commenting / versioning / graph" (2026-07-21)
-owners: Max Vydrin, Egor, Denis, Roma
----
-
 # Studio: Collaboration through comments — business requirements
 
 Capture **how we want comments and collaboration to work in Studio** — at the business-requirements level, before designing the implementation. 
